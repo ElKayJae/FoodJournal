@@ -1,0 +1,48 @@
+<div class="mb">
+    <form [formGroup]="form" (ngSubmit)="searchFood()">
+        <div class="row mb">
+            <mat-form-field class="mr">
+                <mat-label>{{ searchText }}</mat-label>
+                <input matInput type="text" formControlName="search">
+                <mat-hint>200g steak or 3 apples</mat-hint>
+                <button matSuffix mat-icon-button aria-label="Clear" type="button" (click)="clearValue('search')">
+                    <mat-icon>close</mat-icon>
+                </button>
+                </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" class="button-thick mt-03">
+                <div class="icon">
+                    <mat-icon >search</mat-icon>
+                </div>
+            </button>
+        </div>
+    </form>
+
+    <div class="flex-tile">
+        <div *ngFor="let f of foodList, let i=index" >
+            <mat-card class="small-card mb mr">
+                <mat-card-header class="mb space-apart">
+                    <mat-card-title>
+                        {{f.name | titlecase}}
+                    </mat-card-title>
+                    <button matSuffix mat-icon-button aria-label="Clear" type="button" (click)="removeFood(i)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-card-header>
+                <mat-card-content>
+                    Calories: {{f.calories}} g
+                <mat-divider></mat-divider>
+                    Protein: {{f.protein_g}} g
+                <mat-divider></mat-divider>
+                    Fat: {{f.fat_total_g}} g
+                <mat-divider></mat-divider>
+                    Carbohydrates: {{f.carbohydrates_total_g}} g
+                <mat-divider></mat-divider>
+                    Weight: {{f.serving_size_g}} g
+                </mat-card-content>
+
+            </mat-card>
+        </div>
+
+    </div>
+</div>
+

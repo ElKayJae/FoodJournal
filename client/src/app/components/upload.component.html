@@ -1,0 +1,44 @@
+<div class="container">
+    <mat-toolbar color="primary" class="header">
+        <mat-toolbar-row >
+            {{ day | date :'mediumDate'}}
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div class="content">
+        
+        <form [formGroup]="form" (ngSubmit)="process()">
+
+
+            <ngx-mat-timepicker-field [format]="12" [defaultTime]="'11:11 PM'" formControlName="time"></ngx-mat-timepicker-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Meal Category</mat-label>
+                <mat-select formControlName="meal">
+                    <mat-option value="breakfast">Breakfast</mat-option>
+                    <mat-option value="lunch">Lunch</mat-option>
+                    <mat-option value="dinner">Dinner</mat-option>
+                    <mat-option value="supper">Supper</mat-option>
+                    <mat-option value="snack">Snack</mat-option>
+                    <mat-option value="others">Others</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <app-image-upload></app-image-upload>
+    
+            <!-- component to handle search -->
+            <app-search></app-search>
+
+            <div>
+                <button mat-raised-button color="primary" type="submit" [disabled]="submitDisabled()">Submit</button>
+            </div>
+
+
+        </form>
+    </div>
+    
+    
+
+</div>
+

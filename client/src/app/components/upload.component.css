@@ -1,0 +1,72 @@
+.mb{
+    margin-bottom: 1em;
+}
+
+.mr{
+    margin-right: 1em;
+}
+
+.mt-03{
+    margin-top: .3em;
+}
+
+.imageUpload{
+    max-width: 100%;
+    max-height: 500px;
+    
+}
+
+.content{
+    box-sizing: border-box;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+    margin: 2em
+}
+
+.container{
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-flow: column;
+}
+
+.header{
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+
+.icon {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items : center;
+}
+
+.row{
+    flex-grow: 0;
+    display: flex;
+}
+
+.flex-tile{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.space-apart{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.small-card{
+    max-width: fit-content;
+}
+
+.button-thick{
+    height: 50px;
+}

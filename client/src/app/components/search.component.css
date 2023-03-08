@@ -1,0 +1,44 @@
+.mb{
+    margin-bottom: 1em;
+}
+
+.mr{
+    margin-right: 1em;
+}
+
+.mt-03{
+    margin-top: .3em;
+}
+
+.row{
+    flex-grow: 0;
+    display: flex;
+}
+
+.icon {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items : center;
+}
+
+.flex-tile{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.space-apart{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.small-card{
+    max-width: fit-content;
+}
+
+.button-thick{
+    height: 50px;
+}

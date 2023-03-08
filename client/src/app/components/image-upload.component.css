@@ -1,0 +1,12 @@
+.mb{
+    margin-bottom: 1em;
+}
+
+.mr{
+    margin-right: 1em;
+}
+
+.imageUpload{
+    width: 100%;
+    max-width: 500px;
+}

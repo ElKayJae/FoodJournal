@@ -1,0 +1,34 @@
+<div>
+    <button mat-raised-button  [matMenuTriggerFor]="menu" #menuTrigger class="mb" color="primary" type="button">Upload Image</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="imageFileInput.click()">Upload File</button>
+        <input hidden type="file" (change)="selectImage($event)" #imageFileInput >
+        <button mat-menu-item (click)="showCamera()">Open Camera</button>
+    </mat-menu>
+</div>
+
+<div *ngIf="showWebcam" >
+    <div class="mb">
+        <webcam [width]="webCamWidth" [trigger]="trigger" (imageCapture)="capture($event)"
+                [allowCameraSwitch]="true" [switchCamera]="nextWebcamObservable"
+                (initError)="handleInitError($event)">
+        </webcam>
+    </div>
+
+    <div>
+        <button mat-raised-button class="mb mr" color="primary" type="button" (click)="snap()">Snap</button>
+        <button mat-raised-button class="mb mr" color="warn" type="button" (click)="closeWebcam()">Cancel</button>
+        <button *ngIf="multipleWebcamsAvailable" mat-raised-button class="mb" color="primary" (click)="showNextWebcam(true)" >Switch</button>
+    </div>
+    
+</div>
+
+<img *ngIf="showFile" [src]="url" class="imageUpload mb">
+
+<div *ngIf="retake">
+    <button mat-raised-button class="mb mr" color="primary" type="button" (click)="retake=false">Done</button>
+    <button mat-raised-button class="mb" color="accent" type="button" (click)="showCamera()">Retake</button>
+</div>
+
+
+
