@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FoodData } from '../models';
+import { FoodData, Meal } from '../models';
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
+import { NavigationService } from '../services/navigation.service';
 import { TempStorageService } from '../services/temp-storage.service';
 
 @Component({
@@ -18,16 +21,18 @@ export class UploadComponent implements OnInit{
   foodList: FoodData[] = this.tempStorage.foodList
 
   constructor(private activatedRoute: ActivatedRoute, private fb: FormBuilder, 
-    private tempStorage: TempStorageService){}
+    private tempStorage: TempStorageService, private authService: AuthService,
+    private navService: NavigationService, private apiService: ApiService){}
 
   ngOnInit(): void {
+    this.authService.authenticate()
     this.day = new Date(this.activatedRoute.snapshot.params['day'])
     this.form = this.createForm()
     
   }
 
+
   createForm(){
-    
     const date = new Date()
     let timeString: string = date.getHours()%12 + ':'+  date.getMinutes()
     if(date.getHours()> 12) timeString += ' PM' ; else timeString += ' AM'
@@ -39,13 +44,21 @@ export class UploadComponent implements OnInit{
     })
   }
 
+
   process(){
     const configTime = this.processTime()
     console.log("submit form")
     console.log(configTime)
     console.log(this.tempStorage.foodList)
-    console.log(this.tempStorage.imageBlob)
+    console.log("process >>>>>>>>>>>>>>>>" , this.tempStorage.imageBlob)
+    const meal = {
+      foodlist : this.tempStorage.foodList,
+      timestamp : configTime,
+      category : this.form.value['meal']
+    }
+    this.apiService.addMeal(meal)
   }
+
 
   //gets all the date input and converts to date object
   processTime(){
@@ -59,10 +72,18 @@ export class UploadComponent implements OnInit{
     return configTime
   }
 
+  
   submitDisabled(){
     if (this.tempStorage.foodList)
        return this.tempStorage.foodList.length <= 0
     return true
   }
   
+  back(){
+    this.navService.back()
+  }
+
+  logout(){
+    this.navService.logout()
+  }
 }

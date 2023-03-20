@@ -1,6 +1,14 @@
 <div class="content">
-    <form [formGroup]="form" (ngSubmit)="login()" class="mb-3">
+    <form [formGroup]="form" (ngSubmit)="register()">
     
+        <div>
+            <mat-form-field appearance="fill" [style.width.px]="248">
+                <mat-label>Enter your name</mat-label>
+                <input matInput placeholder="John Doe" formControlName="name" required>
+                <mat-error *ngIf="form.get('name')?.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+        </div>
+
         <div>
             <mat-form-field appearance="fill" [style.width.px]="248">
                 <mat-label>Enter your email</mat-label>
@@ -18,11 +26,6 @@
                 </button>
               </mat-form-field>
         </div>
-        <button mat-raised-button color="primary" type="submit">Login</button>
+        <button mat-raised-button color="primary" type="submit">Register</button>
     </form>
-    <div>
-        <p>Dont have an account?</p>
-        <button mat-raised-button color="primary" type="button" [routerLink]="['/register']">Register</button>
-    </div>
-    
 </div>

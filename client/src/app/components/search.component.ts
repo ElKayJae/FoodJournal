@@ -41,7 +41,7 @@ export class SearchComponent {
           console.log(v)
           const result = v as FoodData[]
           if ( result.length <= 0 ) 
-            this.snackbar.open('Food not found, please try another name.', 'OK')
+            this.snackbar.open('Food not found, please try another name.', 'OK', {duration: 2000})
           result.forEach(f => this.foodList.push(f))
           this.tempStorage.setfoodList(this.foodList)
           this.searchText = "Search more items"

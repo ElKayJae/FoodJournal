@@ -1,7 +1,21 @@
 <div class="container">
     <mat-toolbar color="primary" class="header">
         <mat-toolbar-row >
-            {{ day | date :'mediumDate'}}
+            <button mat-icon-button type="button" (click)="back()">
+                <div class="icon">
+                    <mat-icon>arrow_back</mat-icon>
+                </div>
+            </button>
+            <span class="mr-2">Calorie Journal</span>
+            <span>
+                {{ day | date :'mediumDate'}}
+            </span>
+            <span class="spacer"></span>
+            <button mat-icon-button type="button" (click)="logout()">
+                <div class="icon">
+                    <mat-icon>logout</mat-icon>
+                </div>
+            </button>
         </mat-toolbar-row>
     </mat-toolbar>
 

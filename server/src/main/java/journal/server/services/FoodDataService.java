@@ -16,8 +16,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.json.JsonValue;
+import journal.server.models.FoodData;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -31,15 +34,13 @@ public class FoodDataService {
 
     private static final String URL = "https://api.calorieninjas.com/v1/nutrition";
 
-    public Optional<JsonArray> getFoodList(String q){
-        // String apiKey = System.getenv("CALORIE_NINJA_API_KEY");
+    public Optional<JsonArray> getFoodDataList(String q){
 
         String requestUrl = UriComponentsBuilder.fromUriString(URL)
                             .queryParam("query", q)
                             .toUriString()
                             .replace("%20", " ");
-                            
-        // String requestUrl = "https://api.calorieninjas.com/v1/nutrition?query=apple orange";
+
 
         logger.info(requestUrl);
         RestTemplate template = new RestTemplate();
@@ -54,11 +55,21 @@ public class FoodDataService {
                                     request, 
                                     String.class,
                                     1);
+                                    
+
+            logger.info("response body >>>>>>>>> " + resp.getBody());
             JsonReader reader = Json.createReader(new StringReader(resp.getBody()));
             JsonObject o = reader.readObject();
             JsonArray arr = o.getJsonArray("items");
-            logger.info("response body >>>>>>>>> " + resp.getBody());
-            return Optional.of(arr);
+            JsonArrayBuilder builder = Json.createArrayBuilder();
+            for (JsonValue v : arr){
+                builder.add(
+                    FoodData.toJsonObject(
+                        FoodData.createFoodData((JsonObject) v)
+                    )
+                );
+            }
+            return Optional.of(builder.build());
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
@@ -66,9 +77,5 @@ public class FoodDataService {
         logger.info("response empty");
         return Optional.empty();
 
-    }
-
-    public String getApiKey() {
-        return apiKey;
     }
 }

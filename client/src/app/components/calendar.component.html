@@ -1,6 +1,13 @@
 <mat-toolbar color="primary" class="mb">
     <mat-toolbar-row >
-        Home
+        <span> Home </span>
+
+        <span class="spacer"></span>
+        <button mat-icon-button type="button" (click)="logout()">
+            <div class="icon">
+                <mat-icon>logout</mat-icon>
+            </div>
+        </button>
     </mat-toolbar-row>
 </mat-toolbar>
 <!-- <div class='demo-app-sidebar-section'>

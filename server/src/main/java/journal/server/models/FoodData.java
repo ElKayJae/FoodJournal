@@ -1,15 +1,23 @@
 package journal.server.models;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.json.JsonNumber;
+import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FoodData {
 
     private static final Logger logger = LoggerFactory.getLogger(FoodData.class);
@@ -18,73 +26,47 @@ public class FoodData {
     private Integer weight;
     private BigDecimal calories;
     private BigDecimal protein;
-    private BigDecimal carbs;
-    private boolean checked=false;
+    private BigDecimal carbohydrates;
+    private BigDecimal fat;
 
-    public boolean isChecked() {
-        return checked;
-    }
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    private static ArrayList<FoodData> foodList = new ArrayList<>();
-
-    public static ArrayList<FoodData> getFoodList() {
-        return foodList;
-    }
-    public static void setFoodList(ArrayList<FoodData> foodList) {
-        FoodData.foodList = foodList;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public Integer getWeight() {
-        return weight;
-    }
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-    public BigDecimal getCalories() {
-        return calories;
-    }
-    public void setCalories(BigDecimal calories) {
-        this.calories = calories;
-    }
-    public BigDecimal getProtein() {
-        return protein;
-    }
-    public void setProtein(BigDecimal protein) {
-        this.protein = protein;
-    }
-    public BigDecimal getCarbs() {
-        return carbs;
-    }
-    public void setCarbs(BigDecimal carbs) {
-        this.carbs = carbs;
-    }
-
-    public static FoodData createJson(JsonObject o) throws IOException {
+    public static FoodData createFoodData(JsonObject o) {
 
         logger.info("createJson fooddata");
         FoodData foodData = new FoodData();
-        String nameStr = o.getString("name");
-        foodData.name = nameStr;
-        logger.info(nameStr);
-        JsonNumber weightNum = o.getJsonNumber("serving_size_g");
-        foodData.weight = weightNum.intValue();
-        logger.info(foodData.weight.toString());
-        JsonNumber caloriesNum = o.getJsonNumber("calories");
-        foodData.calories = caloriesNum.bigDecimalValue();
-        JsonNumber proteinNum = o.getJsonNumber("protein_g");
-        foodData.protein = proteinNum.bigDecimalValue();
-        JsonNumber carbsNum = o.getJsonNumber("carbohydrates_total_g");
-        foodData.carbs = carbsNum.bigDecimalValue();
+        foodData.setName(o.getString("name"));
+        foodData.setWeight(o.getInt("serving_size_g"));
+        foodData.setCalories(o.getJsonNumber("calories").bigDecimalValue());
+        foodData.setProtein(o.getJsonNumber("protein_g").bigDecimalValue());
+        foodData.setCarbohydrates(o.getJsonNumber("carbohydrates_total_g").bigDecimalValue());
+        foodData.setFat(o.getJsonNumber("fat_total_g").bigDecimalValue());
+        
         return foodData;
     }
     
+    public static JsonObject toJsonObject(FoodData data) {
+
+        JsonObjectBuilder builder = Json.createObjectBuilder()
+            .add("name", data.getName())
+            .add("weight", data.getWeight())
+            .add("calories", data.getCalories())
+            .add("protein", data.getProtein())
+            .add("carbohydrates", data.getCarbohydrates())
+            .add("fat", data.getFat());
+
+        return builder.build();
+    }
+    
+    public static Document toDocument(FoodData data){
+
+        Document d = new Document();
+        d.put("name", data.getName());
+        d.put("weight", data.getWeight());
+        d.put("calories", data.getCalories());
+        d.put("protein", data.getProtein());
+        d.put("carbohydrates", data.getCarbohydrates());
+        d.put("fat", data.getFat());
+
+        return d;
+    }
     
 }

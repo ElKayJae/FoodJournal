@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.authService.getJwtToken(this.form.value['email'], this.form.value['password'])
+    
   }
 
   getErrorMessage() {

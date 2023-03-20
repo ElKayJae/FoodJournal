@@ -2,16 +2,13 @@ package journal.server.services;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.json.Json;
 import journal.server.config.JwtService;
-import journal.server.models.AuthenticationRequest;
-import journal.server.models.AuthenticationResponse;
-import journal.server.models.RegisterRequest;
 import journal.server.models.Role;
 import journal.server.models.User;
 import journal.server.repositories.SQLRepository;
@@ -26,32 +23,30 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     
-    public AuthenticationResponse register(RegisterRequest request){
-        User user = User.builder()
-                    .name(request.getName())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
-                    .build();
+    public String register(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
+        // User.builder()
+        //             .name(user.getName())
+        //             .email(user.getEmail())
+        //             .password(passwordEncoder.encode(user.getPassword()))
+        //             .role(Role.USER)
+        //             .build();
         repository.registerUser(user);
 
         String jwtToken = jwtService.generateToken(user);
 
-        return AuthenticationResponse.builder()
-            .token(jwtToken)
-            .build();
+        return Json.createObjectBuilder().add("token", jwtToken).build().toString();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public String authenticate(User user){
 
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
-        Optional<User> opt = repository.findUserByEmail(request.getEmail());
-        System.out.println(request.getEmail());
+        Optional<User> opt = repository.findUserByEmail(user.getEmail());
         String jwtToken = jwtService.generateToken(opt.get());
-        return AuthenticationResponse.builder()
-            .token(jwtToken)
-            .build();
+
+        return Json.createObjectBuilder().add("token", jwtToken).build().toString();
     }
 }

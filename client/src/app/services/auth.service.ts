@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 
@@ -11,16 +12,16 @@ export class AuthService {
 
   jwt = ''
 
-  constructor(private httpClient: HttpClient, private router : Router) {}
+  constructor(private httpClient: HttpClient, private router : Router, private snackBar : MatSnackBar) {}
 
   authenticate(){
     const jwt = localStorage.getItem('jwt')
-    console.log('jwt in authentication', jwt)
+    console.log("authenticating...")
     const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${jwt}`)
-    lastValueFrom(this.httpClient.get('/api/loadpage', {headers: headers}))
+    .set('Authorization', `Bearer ${jwt}`)
+    lastValueFrom(this.httpClient.get('/api/loadpage', {headers: headers})).then( () => console.log("authenticated"))
       .catch(error => {
-        console.error(error)
+        console.error(error, "authentication failed")
         this.router.navigate(['/login'])
       })
   }
@@ -30,12 +31,26 @@ export class AuthService {
       "email" : username,
       "password" : password
     }
-    lastValueFrom(this.httpClient.post<any>('/api/auth/authenticate', credentials)).then(
+    lastValueFrom(this.httpClient.post<any>('/api/auth/login', credentials)).then(
       token => {
-        console.log(token)
         this.jwt = token['token']
         localStorage.setItem('jwt', this.jwt)}
-        ).catch(error => {
+        ).then(() => 
+        {
+          this.router.navigate([''])
+          this.snackBar.open(`logged in as ${username}`, 'OK',{duration : 2000})
+
+        })
+        .catch(error => {
           console.error(error)})
+  }
+
+  register(name:string, username: string, password: string) : Promise<any> {
+    const user  = {
+      "name" : name,
+      "email" : username,
+      "password" : password
+    }
+    return lastValueFrom(this.httpClient.post<any>('/api/auth/register', user))
   }
 }

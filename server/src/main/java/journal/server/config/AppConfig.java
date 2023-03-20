@@ -1,5 +1,6 @@
 package journal.server.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,12 +13,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
 import journal.server.repositories.SQLRepository;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+public class AppConfig {
 
     private final SQLRepository repository;
     
@@ -51,6 +58,21 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    //S3 config
+
+    @Value ("${SPACES_ACCESS}")
+    private String spacesAccess;
+
+    @Value ("${SPACES_SECRET}")
+    private String spacesSecret;
+
+    @Bean
+    public AmazonS3 createS3Client(){
+        BasicAWSCredentials cred = new BasicAWSCredentials(spacesAccess, spacesSecret);
+        EndpointConfiguration epConfig = new EndpointConfiguration ("sgp1.digitaloceanspaces.com", "sgp1");
+        return AmazonS3ClientBuilder.standard().withEndpointConfiguration(epConfig).withCredentials(new AWSStaticCredentialsProvider(cred)).build();
     }
 
 }

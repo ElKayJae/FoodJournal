@@ -27,7 +27,8 @@ public class SQLRepository {
 
     public void registerUser(User user){
         String userId = UUID.randomUUID().toString().substring(0,8);
-        template.update(SQL_REGISTER_USER, userId,  user.getName(), user.getEmail(), user.getPassword());
+        template.update(SQL_REGISTER_USER, userId,  user.getName(), user.getEmail(), user.getPassword(), user.getRole().name());
     }
+
 
 }

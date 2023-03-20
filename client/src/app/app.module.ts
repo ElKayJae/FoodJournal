@@ -16,11 +16,13 @@ import { SearchComponent } from './components/search.component';
 import { ImageUploadComponent } from './components/image-upload.component';
 import { WebcamModule } from 'ngx-webcam';
 import { LoginComponent } from './components/login.component';
+import { RegisterComponent } from './components/register.component';
 
 
 const appRoutes: Routes = [
   { path: '', component: CalendarComponent},
   { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent},
   { path: 'upload/:day', component: UploadComponent},
   { path: 'detail/:id', component: DetailComponent},
   { path: '**', redirectTo: 'create', pathMatch: 'full'}
@@ -34,7 +36,8 @@ const appRoutes: Routes = [
     DetailComponent,
     SearchComponent,
     ImageUploadComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

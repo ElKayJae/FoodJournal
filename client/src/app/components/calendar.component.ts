@@ -4,6 +4,7 @@ import { Calendar, CalendarOptions, DateSelectArg, EventApi, EventClickArg } fro
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { AuthService } from '../services/auth.service';
+import { NavigationService } from '../services/navigation.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   @ViewChild('calendar')
   calender!: Calendar
   
-  constructor(private changeDetector: ChangeDetectorRef, private router: Router, private authService : AuthService) {
+  constructor(private router: Router, private authService : AuthService, private navService: NavigationService) {
   }
 
   ngOnInit(): void {
@@ -116,6 +117,10 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   createEventId(){
     return "fsdf12"
+  }
+
+  logout(){
+    this.navService.logout()
   }
 
 }
