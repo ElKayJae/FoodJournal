@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FoodData, Meal } from '../models';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
@@ -19,14 +19,21 @@ export class UploadComponent implements OnInit{
   form!: FormGroup
   url : any
   foodList: FoodData[] = this.tempStorage.foodList
+  day_id!: string
 
   constructor(private activatedRoute: ActivatedRoute, private fb: FormBuilder, 
     private tempStorage: TempStorageService, private authService: AuthService,
-    private navService: NavigationService, private apiService: ApiService){}
+    private navService: NavigationService, private apiService: ApiService,
+    private router: Router){}
 
   ngOnInit(): void {
     this.authService.authenticate()
-    this.day = new Date(this.activatedRoute.snapshot.params['day'])
+    const dayString = this.activatedRoute.snapshot.params['day']
+    this.day = new Date(dayString)
+    this.apiService.searchDay(dayString).then(v => {
+      this.day_id = v['day_id']
+      console.log("day_id: "+this.day_id)
+    })
     this.form = this.createForm()
     
   }
@@ -36,7 +43,6 @@ export class UploadComponent implements OnInit{
     const date = new Date()
     let timeString: string = date.getHours()%12 + ':'+  date.getMinutes()
     if(date.getHours()> 12) timeString += ' PM' ; else timeString += ' AM'
-    console.log(timeString)
 
     return this.fb.group({
       meal : this.fb.control(''),
@@ -48,15 +54,13 @@ export class UploadComponent implements OnInit{
   process(){
     const configTime = this.processTime()
     console.log("submit form")
-    console.log(configTime)
-    console.log(this.tempStorage.foodList)
-    console.log("process >>>>>>>>>>>>>>>>" , this.tempStorage.imageBlob)
     const meal = {
       foodlist : this.tempStorage.foodList,
       timestamp : configTime,
       category : this.form.value['meal']
     }
-    this.apiService.addMeal(meal)
+    this.apiService.addMeal(meal, this.day_id)
+      .then(() => this.router.navigate(['/']))
   }
 
 

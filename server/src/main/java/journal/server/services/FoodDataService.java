@@ -56,8 +56,6 @@ public class FoodDataService {
                                     String.class,
                                     1);
                                     
-
-            logger.info("response body >>>>>>>>> " + resp.getBody());
             JsonReader reader = Json.createReader(new StringReader(resp.getBody()));
             JsonObject o = reader.readObject();
             JsonArray arr = o.getJsonArray("items");

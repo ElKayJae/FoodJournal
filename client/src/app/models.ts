@@ -6,13 +6,17 @@ export interface FoodData{
     protein: number
     weight: number
     fat: number
-
-    
 }
 
 export interface User{
     email: string
     password: string
+}
+
+export interface Day{
+    day_id: string
+    calories: string
+    date: string
 }
 
 export interface Meal{

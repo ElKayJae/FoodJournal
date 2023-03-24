@@ -27,7 +27,9 @@ public class Meal {
         d.put("meal_id", meal.getMeal_id());
         d.put("timestamp", meal.getTimestamp());
         d.put("category", meal.getCategory());
-        d.put("imageurl", meal.getImageurl());
+        if (meal.getImageurl() != null ){
+            d.put("imageurl", meal.getImageurl());
+        }
         List<Document> documentList = new ArrayList<>();
         FoodData[] mealList = meal.getFoodlist();
         for (FoodData data: mealList){
@@ -38,4 +40,11 @@ public class Meal {
         return d;
     }
 
+    public Float getCalories(){
+        Float calories = 0f;
+        for (FoodData food: this.foodlist)
+            calories += food.getCalories().floatValue();
+        
+        return calories;
+    }
 }

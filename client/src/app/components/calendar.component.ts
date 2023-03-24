@@ -1,8 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Calendar, CalendarOptions, DateSelectArg, EventApi, EventClickArg } from '@fullcalendar/core';
+import { Calendar, CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventInput, EventSourceFuncArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { Day } from '../models';
+import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
 
@@ -19,30 +21,36 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   @ViewChild('calendar')
   calender!: Calendar
   
-  constructor(private router: Router, private authService : AuthService, private navService: NavigationService) {
+  constructor(private router: Router, private authService : AuthService, private navService: NavigationService, private apiService: ApiService) {
   }
 
   ngOnInit(): void {
     this.authService.authenticate()
+    // this.apiService.getDays().then(v => {
+    //   v.forEach(d => this.events.push(d))
+    // })
+    // console.log(this.events)
+    // console.log("current events", this.currentEvents)
   }
 
   ngAfterViewInit(): void {
     console.log("afterViewInit",this.calender)
   }
 
-  events = [
-    { id:'1', date: '2023-02-01',  color: "#3F51B5",  calories: 1659},
-    { id:'2', date: '2023-02-03',  color: "#FF4081",  calories: 1659},
-    { id:'3', date: '2023-02-04',  color: "#3F51B5",  calories: 1659},
-    { id:'4', date: '2023-02-05',  color: "#3F51B5",  calories: 1659},
-    { id:'5', date: '2023-02-06',  color: "#3F51B5",  calories: 1659},
-    { id:'6', date: '2023-02-07',  color: "#3F51B5",  calories: 1659},
-    { id:'7', date: '2023-02-08',  color: "#3F51B5",  calories: 1659},
-    { id:'8', date: '2023-02-09',  color: "#FF4081",  calories: 1659},
-    { id:'9', date: '2023-02-10',  color: "#3F51B5",  calories: 1659},
-    { id:'10', date: '2023-02-02',  color: "#3F51B5",  calories: 2655 },
-
-  ]
+  // events = [
+  //   { id:'1', date: '2023-02-01',  color: "#3F51B5",  calories: 1659},
+  //   { id:'2', date: '2023-02-03',  color: "#FF4081",  calories: 1659},
+  //   { id:'3', date: '2023-02-04',  color: "#3F51B5",  calories: 1659},
+  //   { id:'4', date: '2023-02-05',  color: "#3F51B5",  calories: 1659},
+  //   { id:'5', date: '2023-02-06',  color: "#3F51B5",  calories: 1659},
+  //   { id:'6', date: '2023-02-07',  color: "#3F51B5",  calories: 1659},
+  //   { id:'7', date: '2023-02-08',  color: "#3F51B5",  calories: 1659},
+  //   { id:'8', date: '2023-02-09',  color: "#FF4081",  calories: 1659},
+  //   { id:'9', date: '2023-02-10',  color: "#3F51B5",  calories: 1659},
+  //   { id:'10', date: '2023-02-02',  color: "#3F51B5",  calories: 2655 },
+  //   { date: '2023-03-02',  color: "#3F51B5",  calories: 2655 },
+  // ]
+  // events: Day[] = []
 
   currentEvents: EventApi[] = [];
 
@@ -53,7 +61,8 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     ],
 
     initialView: 'dayGridMonth',
-    events: this.events, // alternatively, use the `events` setting to fetch from a feed
+    // events: this.events, // alternatively, use the `events` setting to fetch from a feed
+    events: this.loadEvents.bind(this), // alternatively, use the `events` setting to fetch from a feed
     weekends: true,
     editable: true,
     selectable: true,
@@ -104,9 +113,7 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   handleEventClick(clickInfo: EventClickArg) {
       // clickInfo.event.remove();
       console.info("EventClick", clickInfo.event.extendedProps)
-      console.info("EventClick", clickInfo.event.id)
-      this.router.navigate(['/detail' , clickInfo.event.id])
-    
+      this.router.navigate(['/detail' , clickInfo.event.extendedProps['day_id']])
   }
 
   // handleEvents(events: EventApi[]) {
@@ -114,6 +121,27 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   //   this.changeDetector.detectChanges();
   //   this.currentEvents.forEach( e => console.log( e.start))
   // }
+
+  loadEvents(args: EventSourceFuncArg) : Promise<EventInput[]> {
+    return new Promise<EventInput[]> ((resolve) => {
+      console.log("args>>>>>> ",args.startStr)
+      this.apiService.getDays().then(days => {
+        var events: EventInput[] = [];
+        days.forEach( day => {
+          var colorCode = "#3F51B5"
+          if (Number(day.calories) > 2000)
+            colorCode = "#FF4081"
+          events.push({
+            day_id: day.day_id,
+            calories: day.calories,
+            date: day.date,
+            color: colorCode,
+          })
+          resolve(events)
+        })
+      })
+    })
+  }
 
   createEventId(){
     return "fsdf12"

@@ -25,6 +25,7 @@ import journal.server.models.Meal;
 import journal.server.services.FoodDataService;
 import journal.server.services.ImageService;
 import journal.server.services.UserService;
+import journal.server.services.Utilities;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -36,6 +37,7 @@ public class FoodJournalController {
     private final JwtService jwtService;
     private final ImageService imageService;
     private final UserService userService;
+    private final Utilities utilsService;
 
     @ResponseBody
     @GetMapping (path= "/search")
@@ -48,10 +50,9 @@ public class FoodJournalController {
             JsonObject error = Json.createObjectBuilder().add("error", "failed to retrieve foods").build();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error.toString());
         }
-
         return ResponseEntity.ok(arr.toString());
-
     }
+
 
     @ResponseBody
     @GetMapping (path= "/loadpage")
@@ -61,33 +62,60 @@ public class FoodJournalController {
         System.out.printf("%s authenticated\n", username);
         return ResponseEntity.ok().build();
     }
-    
+
+
     @ResponseBody
-    @PostMapping (path = "/addmeal")
-    public ResponseEntity<String> addMeal(@RequestHeader HttpHeaders header, @RequestBody Meal meal){
+    @GetMapping (path= "/getdays")
+    public ResponseEntity<String> getDays(@RequestHeader HttpHeaders header){
         String value = header.getFirst("Authorization").substring(7);
-        System.out.println(meal.getCategory());
-        System.out.println(meal.getTimestamp());
-        System.out.println(meal.getMeal_id());
-        System.out.println(meal.getImageurl());
-        System.out.println("Test~~~~~~~~~~~~~~~~~~~~");
-        userService.insertMeal(meal);
-        
-        return ResponseEntity.ok().build();
+        String username = jwtService.extractUsername(value);
+        Optional<JsonArray> opt = userService.findDaysByEmail(username);
+        return ResponseEntity.ok().body(opt.get().toString());
+    }
+
+
+    @ResponseBody
+    @GetMapping (path= "/searchday")
+    public ResponseEntity<String> searchdayResponseEntity(@RequestHeader HttpHeaders header, @RequestParam String date){
+        String value = header.getFirst("Authorization").substring(7);
+        String username = jwtService.extractUsername(value);
+        Optional<String> opt = userService.findDayByEmailAndDay(username, date);
+        String dayId = "";
+        if (opt.isPresent()) dayId = opt.get();
+        JsonObject resp = Json.createObjectBuilder().add("day_id", dayId).build();
+        return ResponseEntity.status(HttpStatus.OK).body(resp.toString());
     }
     
+
+    @ResponseBody
+    @PostMapping (path = "/addmeal")
+    public ResponseEntity<String> addMeal(@RequestHeader HttpHeaders header, @RequestBody Meal meal, @RequestParam String day_id){
+        String value = header.getFirst("Authorization").substring(7);
+        String username = jwtService.extractUsername(value);
+        try {
+            userService.insertMeal(meal, day_id, username);
+        } catch (Exception e) {
+            userService.deleteImage(meal.getMeal_id());
+        }
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("day_id", day_id).build().toString());
+    }
+    
+
     @ResponseBody
     @PostMapping (path = "/uploadimage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadImage(@RequestHeader HttpHeaders header, @RequestPart MultipartFile image){
-
-        Optional<Meal> opt = imageService.uploadImage(image);
-        if (opt.isEmpty()) 
-            return ResponseEntity.internalServerError().body(Json.createObjectBuilder()
-                    .add("error", "failed to upload image").build().toString());
-
-        Meal meal = opt.get();
+    public ResponseEntity<String> uploadImage(@RequestHeader HttpHeaders header, @RequestPart(required = false) MultipartFile image){
+        if (image != null){
+            Optional<Meal> opt = imageService.uploadImage(image);
+            if (opt.isEmpty()) 
+                return ResponseEntity.internalServerError().body(Json.createObjectBuilder()
+                        .add("error", "failed to upload image").build().toString());
+    
+            Meal meal = opt.get();
+            return ResponseEntity.ok().body(Json.createObjectBuilder()
+                .add("meal_id", meal.getMeal_id()).add("image_url", meal.getImageurl()).build().toString());
+        }
         return ResponseEntity.ok().body(Json.createObjectBuilder()
-            .add("meal_id", meal.getMeal_id()).add("image_url", meal.getImageurl()).build().toString());
+        .add("meal_id", utilsService.generateUUID()).build().toString());
     }
     
 }

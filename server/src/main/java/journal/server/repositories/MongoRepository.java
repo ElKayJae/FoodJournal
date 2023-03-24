@@ -15,8 +15,9 @@ public class MongoRepository {
     @Autowired
     MongoTemplate template;
 
-    public void insertMeal(Meal meal){
+    public void insertMeal(Meal meal, String dayid){
         Document toInsert = Meal.toDocument(meal);
+        toInsert.put("day_id", dayid);
         template.insert(toInsert, C_MEALS);
     }
 }
