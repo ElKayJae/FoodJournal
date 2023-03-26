@@ -1,6 +1,5 @@
 package journal.server.models;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -20,12 +19,12 @@ public class Day {
     private Meal[] mealList;
     private String dayId;
     private Date date;
-    private BigDecimal calories;
+    private Double calories;
 
     public static Day createDay(SqlRowSet rs){
         Day day = new Day();
         day.setDayId(rs.getString("day_id"));
-        day.setCalories(rs.getBigDecimal("calories"));
+        day.setCalories(rs.getDouble("calories"));
         day.setDate(rs.getDate("day"));
 
         return day;

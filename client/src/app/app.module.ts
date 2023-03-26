@@ -8,7 +8,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { CalendarComponent } from './components/calendar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DetailComponent } from './components/detail.component';
+import { DetailComponent, DialogConfirmation } from './components/detail.component';
 import { UploadComponent } from './components/upload.component';
 import { MaterialModule } from './material.module';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
@@ -24,7 +24,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
   { path: 'upload/:day', component: UploadComponent},
-  { path: 'detail/:id', component: DetailComponent},
+  { path: 'detail/:day/:id', component: DetailComponent},
   { path: '**', redirectTo: 'create', pathMatch: 'full'}
 ]
 
@@ -37,7 +37,8 @@ const appRoutes: Routes = [
     SearchComponent,
     ImageUploadComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    DialogConfirmation
   ],
   imports: [
     BrowserModule,

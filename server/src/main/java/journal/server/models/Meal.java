@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.bson.Document;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonObjectBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +25,7 @@ public class Meal {
     private Date timestamp;
     private String category;
     private String imageurl;
+
 
     public static Document toDocument(Meal meal){
         Document d = new Document();
@@ -40,11 +45,44 @@ public class Meal {
         return d;
     }
 
+
+    public static Meal createMealFromDocument(Document d){
+        Meal meal = new Meal();
+        meal.setMeal_id(d.getString("meal_id"));
+        meal.setCategory(d.getString("category"));
+        if (null != d.getString("imageurl"))
+            meal.setImageurl(d.getString("imageurl"));
+        meal.setTimestamp(d.getDate("timestamp"));
+        List<Document> foodListDoc = d.getList("foodlist", Document.class);
+        meal.setFoodlist(FoodData.fromDocumentList(foodListDoc));
+
+        return meal;
+    }
+
+    public static JsonObject toJson(Meal meal){
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        FoodData[] foodList = meal.getFoodlist();
+        for (FoodData d: foodList){
+            arrayBuilder.add(FoodData.toJson(d));
+        }
+
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("meal_id", meal.getMeal_id());
+        builder.add("category", meal.getCategory());
+        if (null != meal.getImageurl())
+            builder.add("imageurl", meal.getImageurl());
+        builder.add("calories", meal.getCalories());
+        builder.add("foodlist", arrayBuilder.build());
+        builder.add("timestamp", meal.getTimestamp().toString());
+
+        return builder.build();
+    }
+
+    
     public Float getCalories(){
         Float calories = 0f;
         for (FoodData food: this.foodlist)
             calories += food.getCalories().floatValue();
-        
         return calories;
     }
 }

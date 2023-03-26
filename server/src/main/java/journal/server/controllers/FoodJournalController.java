@@ -70,6 +70,10 @@ public class FoodJournalController {
         String value = header.getFirst("Authorization").substring(7);
         String username = jwtService.extractUsername(value);
         Optional<JsonArray> opt = userService.findDaysByEmail(username);
+        if (opt.isEmpty()){
+            JsonObject error = Json.createObjectBuilder().add("error", "no data").build();
+            return ResponseEntity.status(HttpStatus.OK).body(error.toString());
+        }
         return ResponseEntity.ok().body(opt.get().toString());
     }
 
@@ -86,6 +90,14 @@ public class FoodJournalController {
         return ResponseEntity.status(HttpStatus.OK).body(resp.toString());
     }
     
+
+    @ResponseBody
+    @GetMapping (path = "/getmeals")
+    public ResponseEntity<String> getMealsByDayId(@RequestHeader HttpHeaders header, @RequestParam String day_id){
+        JsonArray arr = userService.getMealsByDayId(day_id);
+        return ResponseEntity.ok().body(arr.toString());
+    }
+
 
     @ResponseBody
     @PostMapping (path = "/addmeal")
@@ -117,5 +129,5 @@ public class FoodJournalController {
         return ResponseEntity.ok().body(Json.createObjectBuilder()
         .add("meal_id", utilsService.generateUUID()).build().toString());
     }
-    
+
 }

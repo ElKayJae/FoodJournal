@@ -1,0 +1,117 @@
+.mb{
+    margin-bottom: 1em;
+}
+
+.mr{
+    margin-right: 1em;
+}
+
+.mr-2{
+    margin-right: 2em;
+}
+
+.mt-03{
+    margin-top: .3em;
+}
+
+
+.container{
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-flow: column;
+}
+
+.header{
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+
+.padding-3{
+    padding: 0 3px;
+}
+
+.icon {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items : center;
+}
+
+.row{
+    flex-grow: 0;
+    display: flex;
+}
+
+.flex-tile{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.space-apart{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.button-thick{
+    height: 50px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.food-name{
+    font-size: 1.2em;
+    font-weight: 500;
+    margin-bottom: .5em;
+}
+
+.card-image{
+    height: 50svw;
+    width: auto;
+    object-fit: cover;
+}
+
+.floating-button{
+    position:fixed;
+    left:0;
+    bottom:0;
+    padding: 2em;
+}
+
+.card-container{
+    box-sizing: border-box;
+    flex-shrink: 1;
+    flex-basis: auto;
+    margin: 2em
+}
+
+
+@media only screen and (min-width: 600px){
+
+    .meal-card{
+        width: 500px;
+    }
+
+    .card-image{
+        height: 300px;
+        width: 500px;
+        object-fit: cover;
+    }
+    
+    .tile-content{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+    }
+
+    .tile-margin{
+        margin-right: 2em;
+    }
+
+}

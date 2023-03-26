@@ -1,15 +1,14 @@
 <div class="container">
-    <mat-toolbar color="primary" class="header">
-        <mat-toolbar-row >
+    <mat-toolbar color="primary">
+        <mat-toolbar-row class="padding-3">
             <button mat-icon-button type="button" (click)="back()">
                 <div class="icon">
                     <mat-icon>arrow_back</mat-icon>
                 </div>
             </button>
-            <span class="mr-2">Calorie Journal</span>
-            <span>
-                {{ day | date :'mediumDate'}}
-            </span>
+            <span>Calorie Journal</span>
+            <span class="spacer"></span>
+            <span>{{ day | date :'mediumDate'}}</span>
             <span class="spacer"></span>
             <button mat-icon-button type="button" (click)="logout()">
                 <div class="icon">
@@ -52,7 +51,5 @@
         </form>
     </div>
     
-    
-
 </div>
 

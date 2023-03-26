@@ -72,4 +72,8 @@ public class UserService {
         }
         return Optional.of(arrBuilder.build());
     }
+
+    public JsonArray getMealsByDayId(String day_id){
+        return mongoRepository.getMealsByDayId(day_id);
+    }
 }

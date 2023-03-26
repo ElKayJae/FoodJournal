@@ -37,9 +37,14 @@
 }
 
 .header{
+    box-sizing: border-box;
     flex-grow: 0;
     flex-shrink: 1;
     flex-basis: auto;
+}
+
+.padding-3{
+    padding: 0 3px;
 }
 
 .icon {

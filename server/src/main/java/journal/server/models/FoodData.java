@@ -1,8 +1,10 @@
 package journal.server.models;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.bson.Document;
+import org.bson.types.Decimal128;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +26,10 @@ public class FoodData {
 
     private String name;
     private Integer weight;
-    private BigDecimal calories;
-    private BigDecimal protein;
-    private BigDecimal carbohydrates;
-    private BigDecimal fat;
+    private Double calories;
+    private Double protein;
+    private Double carbohydrates;
+    private Double fat;
 
     public static FoodData createFoodData(JsonObject o) {
 
@@ -35,10 +37,10 @@ public class FoodData {
         FoodData foodData = new FoodData();
         foodData.setName(o.getString("name"));
         foodData.setWeight(o.getInt("serving_size_g"));
-        foodData.setCalories(o.getJsonNumber("calories").bigDecimalValue());
-        foodData.setProtein(o.getJsonNumber("protein_g").bigDecimalValue());
-        foodData.setCarbohydrates(o.getJsonNumber("carbohydrates_total_g").bigDecimalValue());
-        foodData.setFat(o.getJsonNumber("fat_total_g").bigDecimalValue());
+        foodData.setCalories(o.getJsonNumber("calories").doubleValue());
+        foodData.setProtein(o.getJsonNumber("protein_g").doubleValue());
+        foodData.setCarbohydrates(o.getJsonNumber("carbohydrates_total_g").doubleValue());
+        foodData.setFat(o.getJsonNumber("fat_total_g").doubleValue());
         
         return foodData;
     }
@@ -68,5 +70,37 @@ public class FoodData {
 
         return d;
     }
-    
+
+    public static FoodData fromDocument(Document d){
+        FoodData f = new FoodData();
+        f.setCalories(d.getDouble("calories"));
+        f.setCarbohydrates(d.getDouble("carbohydrates"));
+        f.setFat(d.getDouble("fat"));
+        f.setName(d.getString("name"));
+        f.setProtein(d.getDouble("protein"));
+        f.setWeight(d.getInteger("weight"));
+
+        return f;
+    }
+
+    public static FoodData[] fromDocumentList(List<Document> docList){
+        FoodData[] foodList = new FoodData[docList.size()];
+        for (int i = 0; i < foodList.length; i++) {
+            foodList[i] = FoodData.fromDocument(docList.get(i));
+        }
+        return foodList;
+    }
+
+    public static JsonObject toJson(FoodData foodData){
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add("name", foodData.getName());
+        builder.add("calories", foodData.getCalories());
+        builder.add("carbohydrates", foodData.getCarbohydrates());
+        builder.add("fat", foodData.getFat());
+        builder.add("protein", foodData.getProtein());
+        builder.add("weight", foodData.getWeight());
+
+        return builder.build();
+    }
+  
 }

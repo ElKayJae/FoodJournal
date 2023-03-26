@@ -1,1 +1,60 @@
-<p>detail works!</p>
+<div class="container">
+    <mat-toolbar color="primary" class="header">
+        <mat-toolbar-row class="padding-3" >
+            <button mat-icon-button type="button" (click)="back()">
+                <div class="icon">
+                    <mat-icon>arrow_back</mat-icon>
+                </div>
+            </button>
+
+            <span>Calorie Journal</span>
+            <span class="spacer"></span>
+            <span>{{ day | date :'mediumDate'}}</span>
+            <span class="spacer"></span>
+            <button mat-icon-button type="button" (click)="logout()">
+                <div class="icon">
+                    <mat-icon>logout</mat-icon>
+                </div>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div class="card-container tile-content">
+        <div *ngFor="let meal of meal_list">
+            <mat-card class="mb meal-card tile-margin">
+                <mat-card-header class="space-apart">
+                    <mat-card-title>{{meal.category | titlecase}}</mat-card-title>
+                    <mat-card-subtitle> {{meal.meal_id}} </mat-card-subtitle>
+                    <button matSuffix mat-icon-button aria-label="Delete" type="button" (click)="deleteMeal(meal)">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </mat-card-header>
+                <img mat-card-image [src]="meal.imageurl" class="card-image" *ngIf="meal.imageurl">
+                <div class="flex-tile">
+                    <div *ngFor="let f of meal.foodlist, let i=index" >
+                        <mat-card-content>
+                        <div class="food-name">{{f.name | titlecase}}</div>
+                        <mat-divider></mat-divider>
+                            Calories: {{f.calories}} kcal
+                        <mat-divider></mat-divider>
+                            Protein: {{f.protein}} g
+                        <mat-divider></mat-divider>
+                            Fat: {{f.fat}} g
+                        <mat-divider></mat-divider>
+                            Carbs: {{f.carbohydrates}} g
+                        <mat-divider></mat-divider>
+                            Weight: {{f.weight}} g
+                        </mat-card-content>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+
+    <div class="floating-button">
+        <button mat-fab color="primary" (click)="upload()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+</div>
+

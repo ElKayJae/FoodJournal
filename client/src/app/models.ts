@@ -26,3 +26,7 @@ export interface Meal{
     meal_id?: string
     imageurl?: string
 }
+
+export interface DialogData{
+    meal: Meal
+}

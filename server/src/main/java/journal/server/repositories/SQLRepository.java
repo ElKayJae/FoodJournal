@@ -42,7 +42,7 @@ public class SQLRepository {
     public void addCaloriesToDay(String dayId, Meal meal){
         SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAY_BY_DAY_ID, dayId);
         rs.next();
-        Float calories = rs.getFloat("calories");
+        Double calories = rs.getDouble("calories");
         calories += meal.getCalories();
         template.update(SQL_UPDATE_DAY_CALORIES, calories, dayId);
     }

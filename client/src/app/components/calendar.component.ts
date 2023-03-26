@@ -112,8 +112,9 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   handleEventClick(clickInfo: EventClickArg) {
       // clickInfo.event.remove();
+      console.log("event>>>>", clickInfo.event.startStr)
       console.info("EventClick", clickInfo.event.extendedProps)
-      this.router.navigate(['/detail' , clickInfo.event.extendedProps['day_id']])
+      this.router.navigate(['/detail' ,  clickInfo.event.startStr ,clickInfo.event.extendedProps['day_id']])
   }
 
   // handleEvents(events: EventApi[]) {
@@ -139,13 +140,10 @@ export class CalendarComponent implements OnInit, AfterViewInit{
           })
           resolve(events)
         })
-      })
+      }).catch(error => console.error(error))
     })
   }
 
-  createEventId(){
-    return "fsdf12"
-  }
 
   logout(){
     this.navService.logout()

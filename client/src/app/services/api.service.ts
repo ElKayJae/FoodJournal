@@ -35,13 +35,13 @@ export class ApiService {
       this.httpClient.get('/api/searchday', {params: queryParams, headers: headers}))
   }
 
-  addMeal(meal: Meal, dayid: string){
+  addMeal(meal: Meal, day_id: string){
 
     const jwt = localStorage.getItem('jwt')
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwt}`)
     const queryParams =  new HttpParams()
-      .set('day_id', dayid)
+      .set('day_id', day_id)
 
     let formdata = new FormData()
     formdata.set('image', this.tempStorage.imageBlob)
@@ -63,6 +63,20 @@ export class ApiService {
     .set('Authorization', `Bearer ${jwt}`)
 
     return lastValueFrom(
-      this.httpClient.get<Day[]>('/api/getdays', {headers: headers}))
+      this.httpClient.get<Day[]>('/api/getdays', {headers: headers})
+      )
+  }
+
+  getMealsByDayId(day_id: string){
+    const jwt = localStorage.getItem('jwt')
+    const headers = new HttpHeaders()
+    .set('Authorization', `Bearer ${jwt}`)
+
+    const queryParams =  new HttpParams()
+    .set('day_id', day_id)
+
+    return lastValueFrom(
+      this.httpClient.get<Meal[]>('/api/getmeals' , {headers: headers, params: queryParams})
+    )
   }
 }
