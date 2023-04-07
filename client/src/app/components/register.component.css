@@ -6,3 +6,22 @@
     flex-basis: auto;
     margin: 2em
 }
+
+.mb{
+    margin-bottom: 1em;
+}
+
+.mb-3{
+margin-bottom: 3em;
+}
+
+.padding-3{
+    padding: 0 3px;
+}
+
+.container{
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-flow: column;
+}

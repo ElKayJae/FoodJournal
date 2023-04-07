@@ -20,6 +20,8 @@ create table users (
 
 	role enum("USER", "ADMIN"),
 
+	target integer not null,
+
 
 	primary key(user_id)
 );

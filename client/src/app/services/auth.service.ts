@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
+import { User } from '../models';
 
 
 @Injectable({
@@ -45,12 +46,7 @@ export class AuthService {
           console.error(error)})
   }
 
-  register(name:string, username: string, password: string) : Promise<any> {
-    const user  = {
-      "name" : name,
-      "email" : username,
-      "password" : password
-    }
+  register(user : User) : Promise<any> {
     return lastValueFrom(this.httpClient.post<any>('/api/auth/register', user))
   }
 }

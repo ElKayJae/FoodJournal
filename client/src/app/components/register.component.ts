@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { User } from '../models';
+import { NavigationService } from '../services/navigation.service';
 
 @Component({
   selector: 'app-register',
@@ -18,22 +20,34 @@ export class RegisterComponent implements OnInit{
     this.form = this.createForm()
   }
 
-  constructor(private fb : FormBuilder, private authService : AuthService, private router : Router, private snackBar : MatSnackBar){}
+  constructor(private fb : FormBuilder, private authService : 
+    AuthService, private router : Router, private snackBar : MatSnackBar,
+    private navService : NavigationService){}
 
   createForm(){
     return this.fb.group({
       name : this.fb.control('',[Validators.required]),
       email : this.fb.control('',[Validators.required, Validators.email]),
-      password: this.fb.control('',[Validators.required])
+      password: this.fb.control('',[Validators.required]),
+      target: this.fb.control('', [Validators.required])
     })
   }
 
   register(){
-    this.authService.register(this.form.value['name'], this.form.value['email'], this.form.value['password']).then(
+    const user : User = {
+      "name" : this.form.value['name'],
+      "email" : this.form.value['email'],
+      "password" : this.form.value['password'],
+      "target" : this.form.value['target']
+    }
+    this.authService.register(user).then(
       token => {
         this.authService.jwt = token['token']
         localStorage.setItem('jwt', token['token'])}
-        ).then(() => this.router.navigate(['']))
+        ).then(() => {
+          this.router.navigate([''])
+          this.snackBar.open(`logged in as ${user.email}`, 'OK',{duration : 2000})
+        })
         .catch(error => {
           console.error(error)
           this.snackBar.open(error['error']['message'], 'DISMISS', {duration: 2000})
@@ -47,6 +61,10 @@ export class RegisterComponent implements OnInit{
     }
 
     return this.form.get('email')?.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  back(){
+    this.navService.back()
   }
   
 }

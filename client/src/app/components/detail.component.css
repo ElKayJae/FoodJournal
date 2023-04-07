@@ -14,7 +14,6 @@
     margin-top: .3em;
 }
 
-
 .container{
     height: 100vh;
     height: 100svh;
@@ -30,6 +29,10 @@
 
 .padding-3{
     padding: 0 3px;
+}
+
+.bottom-padding{
+    padding: 1.2em;
 }
 
 .icon {

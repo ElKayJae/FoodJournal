@@ -29,9 +29,17 @@ public class SQLRepository {
         return Optional.of(user);
     }
 
+    public Optional<Integer> findTargetCalorieByEmail(String email){
+        SqlRowSet rs = template.queryForRowSet(SQL_FIND_TARGET_CALORIE_BY_EMAIL, email);
+        if (!rs.next()) return Optional.empty();
+        int target =rs.getInt("target");
+
+        return Optional.of(target);
+    }
+
     public void registerUser(User user){
         String userId = UUID.randomUUID().toString().substring(0,8);
-        template.update(SQL_REGISTER_USER, userId,  user.getName(), user.getEmail(), user.getPassword(), user.getRole().name());
+        template.update(SQL_REGISTER_USER, userId,  user.getName(), user.getEmail(), user.getPassword(), user.getTarget(), user.getRole().name());
     }
 
     public void insertNewDay(String dayid, Meal meal, String email){
@@ -39,16 +47,21 @@ public class SQLRepository {
         template.update(SQL_INSERT_NEW_DAY, dayid, meal.getTimestamp(), meal.getCalories(), opt.get().getUserId());
     }
 
-    public void addCaloriesToDay(String dayId, Meal meal){
+    public Double findCaloriesByDayId(String dayId){
         SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAY_BY_DAY_ID, dayId);
         rs.next();
-        Double calories = rs.getDouble("calories");
-        calories += meal.getCalories();
-        template.update(SQL_UPDATE_DAY_CALORIES, calories, dayId);
+        return rs.getDouble("calories");
     }
 
-    public Optional<List<Day>> findDaysByEmail(String email){
-        SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAYS_BY_EMAIL, email);
+    public Double addCaloriesToDay(String dayId, Meal meal, Double intialCalories){
+        Double newCalories = meal.getCalories() + intialCalories;
+        template.update(SQL_UPDATE_DAY_CALORIES, newCalories, dayId);
+        return newCalories;
+    }
+
+    public Optional<List<Day>> findDaysByEmail(String email, String startDate, String endDate){
+        System.out.println(startDate + " " + endDate);
+        SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAYS_BY_EMAIL, email, startDate, endDate);
         if (!rs.next()) return Optional.empty();
         List<Day> dayList = new LinkedList<>();
         Day day = Day.createDay(rs);

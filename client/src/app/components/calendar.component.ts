@@ -16,7 +16,7 @@ import { NavigationService } from '../services/navigation.service';
 })
 export class CalendarComponent implements OnInit, AfterViewInit{
 
-  
+  target! : number
 
   @ViewChild('calendar')
   calender!: Calendar
@@ -25,32 +25,17 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.authService.authenticate()
-    // this.apiService.getDays().then(v => {
-    //   v.forEach(d => this.events.push(d))
-    // })
-    // console.log(this.events)
-    // console.log("current events", this.currentEvents)
+    this.apiService.getTargetCalorie().then(
+      v => this.target = v['target']
+    ).catch(error => {
+      console.error(error, "authentication failed")
+      this.router.navigate(['/login'])
+    })
   }
 
   ngAfterViewInit(): void {
     console.log("afterViewInit",this.calender)
   }
-
-  // events = [
-  //   { id:'1', date: '2023-02-01',  color: "#3F51B5",  calories: 1659},
-  //   { id:'2', date: '2023-02-03',  color: "#FF4081",  calories: 1659},
-  //   { id:'3', date: '2023-02-04',  color: "#3F51B5",  calories: 1659},
-  //   { id:'4', date: '2023-02-05',  color: "#3F51B5",  calories: 1659},
-  //   { id:'5', date: '2023-02-06',  color: "#3F51B5",  calories: 1659},
-  //   { id:'6', date: '2023-02-07',  color: "#3F51B5",  calories: 1659},
-  //   { id:'7', date: '2023-02-08',  color: "#3F51B5",  calories: 1659},
-  //   { id:'8', date: '2023-02-09',  color: "#FF4081",  calories: 1659},
-  //   { id:'9', date: '2023-02-10',  color: "#3F51B5",  calories: 1659},
-  //   { id:'10', date: '2023-02-02',  color: "#3F51B5",  calories: 2655 },
-  //   { date: '2023-03-02',  color: "#3F51B5",  calories: 2655 },
-  // ]
-  // events: Day[] = []
 
   currentEvents: EventApi[] = [];
 
@@ -125,13 +110,11 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   loadEvents(args: EventSourceFuncArg) : Promise<EventInput[]> {
     return new Promise<EventInput[]> ((resolve) => {
-      console.log("args>>>>>> ",args.startStr)
-      this.apiService.getDays().then(days => {
+      this.apiService.getDays(args.startStr, args.endStr).then(days => {
         var events: EventInput[] = [];
-        days.forEach( day => {
+        if (days[0] != null) days.forEach( day => {
           var colorCode = "#3F51B5"
-          if (Number(day.calories) > 2000)
-            colorCode = "#FF4081"
+          if (Number(day.calories) > this.target) colorCode = "#FF4081"
           events.push({
             day_id: day.day_id,
             calories: day.calories,

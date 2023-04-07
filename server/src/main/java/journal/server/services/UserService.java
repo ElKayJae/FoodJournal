@@ -40,6 +40,10 @@ public class UserService {
         return sqlRepository.findDayByEmailAndDay(email, date);
     }
 
+    public Optional<Integer> findTargetCalorieByEmail(String email) {
+        return sqlRepository.findTargetCalorieByEmail(email);
+    }
+
 
     public void registerUser(User user) {
         sqlRepository.registerUser(user);
@@ -51,7 +55,11 @@ public class UserService {
             dayid = UUID.randomUUID().toString().substring(0,8);
             sqlRepository.insertNewDay(dayid, meal, email);
         } else {
-            sqlRepository.addCaloriesToDay(dayid, meal);
+            int target = sqlRepository.findTargetCalorieByEmail(email).get();
+            Double intialCalories = sqlRepository.findCaloriesByDayId(dayid);
+            Double newCalories = sqlRepository.addCaloriesToDay(dayid, meal, intialCalories);
+
+            if (intialCalories < target && newCalories > target) System.out.println("exceeded calories");
         }
             mongoRepository.insertMeal(meal, dayid);
     }
@@ -62,8 +70,8 @@ public class UserService {
     }
 
 
-    public Optional<JsonArray> findDaysByEmail(String email) {
-        Optional<List<Day>> opt = sqlRepository.findDaysByEmail(email);
+    public Optional<JsonArray> findDaysByEmail(String email, String startDate, String endDate) {
+        Optional<List<Day>> opt = sqlRepository.findDaysByEmail(email, startDate, endDate);
         if (opt.isEmpty()) return Optional.empty();
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         List<Day> dayList = opt.get();

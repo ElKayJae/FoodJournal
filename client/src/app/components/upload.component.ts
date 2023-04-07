@@ -45,7 +45,7 @@ export class UploadComponent implements OnInit{
     if(date.getHours()> 12) timeString += ' PM' ; else timeString += ' AM'
 
     return this.fb.group({
-      meal : this.fb.control(''),
+      meal : this.fb.control('', [Validators.required, Validators.minLength(3)]),
       time : this.fb.control(timeString),
     })
   }
@@ -60,7 +60,11 @@ export class UploadComponent implements OnInit{
       category : this.form.value['meal']
     }
     this.apiService.addMeal(meal, this.day_id)
-      .then(() => this.router.navigate(['/']))
+      .then(() => {
+        this.router.navigate(['/'])
+        this.tempStorage.setImage(null)
+        this.tempStorage.setfoodList([])
+      })
   }
 
 

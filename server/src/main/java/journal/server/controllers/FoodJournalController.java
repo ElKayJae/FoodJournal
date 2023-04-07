@@ -56,7 +56,7 @@ public class FoodJournalController {
 
     @ResponseBody
     @GetMapping (path= "/loadpage")
-    public ResponseEntity<String> test(@RequestHeader HttpHeaders header){
+    public ResponseEntity<String> loadPage(@RequestHeader HttpHeaders header){
         String value = header.getFirst("Authorization").substring(7);
         String username = jwtService.extractUsername(value);
         System.out.printf("%s authenticated\n", username);
@@ -65,11 +65,22 @@ public class FoodJournalController {
 
 
     @ResponseBody
-    @GetMapping (path= "/getdays")
-    public ResponseEntity<String> getDays(@RequestHeader HttpHeaders header){
+    @GetMapping (path= "/target")
+    public ResponseEntity<String> getTargetCalorie(@RequestHeader HttpHeaders header){
         String value = header.getFirst("Authorization").substring(7);
         String username = jwtService.extractUsername(value);
-        Optional<JsonArray> opt = userService.findDaysByEmail(username);
+        Optional<Integer> opt = userService.findTargetCalorieByEmail(username);
+        System.out.println(opt.get());
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("target", opt.get()).build().toString());
+    }
+
+
+    @ResponseBody
+    @GetMapping (path= "/getdays")
+    public ResponseEntity<String> getDays(@RequestHeader HttpHeaders header, @RequestParam String start, @RequestParam String end){
+        String value = header.getFirst("Authorization").substring(7);
+        String username = jwtService.extractUsername(value);
+        Optional<JsonArray> opt = userService.findDaysByEmail(username, start, end);
         if (opt.isEmpty()){
             JsonObject error = Json.createObjectBuilder().add("error", "no data").build();
             return ResponseEntity.status(HttpStatus.OK).body(error.toString());

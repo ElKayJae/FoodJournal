@@ -11,6 +11,8 @@ export interface FoodData{
 export interface User{
     email: string
     password: string
+    name: string
+    target: number
 }
 
 export interface Day{

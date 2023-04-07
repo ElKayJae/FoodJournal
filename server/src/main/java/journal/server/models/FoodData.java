@@ -1,10 +1,8 @@
 package journal.server.models;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.bson.Document;
-import org.bson.types.Decimal128;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

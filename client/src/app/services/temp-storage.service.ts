@@ -7,7 +7,7 @@ import { FoodData } from '../models';
 export class TempStorageService {
 
   foodList!: FoodData[]
-  imageBlob!: Blob
+  imageBlob!: Blob | null
   
   constructor() { }
 
@@ -15,7 +15,7 @@ export class TempStorageService {
     this.foodList = foodList
   }
 
-  setImage(image: Blob){
+  setImage(image: Blob|null){
     this.imageBlob = image
   }
 }

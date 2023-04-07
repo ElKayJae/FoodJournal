@@ -44,7 +44,7 @@
             <app-search></app-search>
 
             <div>
-                <button mat-raised-button color="primary" type="submit" [disabled]="submitDisabled()">Submit</button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="submitDisabled() || form.invalid">Submit</button>
             </div>
 
 
