@@ -16,13 +16,16 @@ export class RegisterComponent implements OnInit{
   form! : FormGroup
   hide = true
 
+  
+  constructor(private fb : FormBuilder, private authService : 
+    AuthService, private router : Router, private snackBar : MatSnackBar,
+    private navService : NavigationService){}
+
+
   ngOnInit(): void {
     this.form = this.createForm()
   }
 
-  constructor(private fb : FormBuilder, private authService : 
-    AuthService, private router : Router, private snackBar : MatSnackBar,
-    private navService : NavigationService){}
 
   createForm(){
     return this.fb.group({
@@ -32,6 +35,7 @@ export class RegisterComponent implements OnInit{
       target: this.fb.control('', [Validators.required])
     })
   }
+
 
   register(){
     const user : User = {
@@ -52,20 +56,21 @@ export class RegisterComponent implements OnInit{
           console.error(error)
           this.snackBar.open(error['error']['message'], 'DISMISS', {duration: 2000})
         })
-    
   }
+
 
   getErrorMessage() {
     if (this.form.get('email')?.hasError('required')) {
       return 'You must enter a value';
     }
-
     return this.form.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
+
 
   back(){
     this.navService.back()
   }
   
+
 }
 

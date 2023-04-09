@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -120,7 +121,23 @@ public class FoodJournalController {
         } catch (Exception e) {
             userService.deleteImage(meal.getMeal_id());
         }
-        return ResponseEntity.ok().body(Json.createObjectBuilder().add("day_id", day_id).build().toString());
+        return ResponseEntity.status(HttpStatus.CREATED).body(Json.createObjectBuilder().add("day_id", day_id).build().toString());
+    }
+
+
+    @ResponseBody
+    @DeleteMapping (path = "/deletemeal")
+    public ResponseEntity<String> deleteMeal(@RequestParam String meal_id, @RequestParam Double calories, @RequestParam String day_id){
+        userService.deleteMeal(meal_id, calories, day_id);
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("meal_id", meal_id).build().toString());
+    }
+
+
+    @ResponseBody
+    @DeleteMapping (path = "/deleteday")
+    public ResponseEntity<String> deleteDay(@RequestParam String day_id){
+        userService.deleteDay(day_id);
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("message", "deleted").build().toString());
     }
     
 
@@ -140,5 +157,6 @@ public class FoodJournalController {
         return ResponseEntity.ok().body(Json.createObjectBuilder()
         .add("meal_id", utilsService.generateUUID()).build().toString());
     }
+
 
 }

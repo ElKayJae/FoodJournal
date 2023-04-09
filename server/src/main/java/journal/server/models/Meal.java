@@ -23,6 +23,7 @@ public class Meal {
     private String meal_id;
     private FoodData[] foodlist;
     private Date timestamp;
+    private Double calories;
     private String category;
     private String imageurl;
 
@@ -32,6 +33,7 @@ public class Meal {
         d.put("meal_id", meal.getMeal_id());
         d.put("timestamp", meal.getTimestamp());
         d.put("category", meal.getCategory());
+        d.put("calories",meal.calculateCalories());
         if (meal.getImageurl() != null ){
             d.put("imageurl", meal.getImageurl());
         }
@@ -53,6 +55,7 @@ public class Meal {
         if (null != d.getString("imageurl"))
             meal.setImageurl(d.getString("imageurl"));
         meal.setTimestamp(d.getDate("timestamp"));
+        meal.setCalories(d.getDouble("calories"));
         List<Document> foodListDoc = d.getList("foodlist", Document.class);
         meal.setFoodlist(FoodData.fromDocumentList(foodListDoc));
 
@@ -79,10 +82,10 @@ public class Meal {
     }
 
     
-    public Float getCalories(){
-        Float calories = 0f;
+    public Double calculateCalories(){
+        Double calories = 0d;
         for (FoodData food: this.foodlist)
-            calories += food.getCalories().floatValue();
+            calories += food.getCalories();
         return calories;
     }
 }

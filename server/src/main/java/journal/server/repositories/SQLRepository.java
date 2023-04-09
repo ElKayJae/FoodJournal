@@ -29,6 +29,7 @@ public class SQLRepository {
         return Optional.of(user);
     }
 
+    
     public Optional<Integer> findTargetCalorieByEmail(String email){
         SqlRowSet rs = template.queryForRowSet(SQL_FIND_TARGET_CALORIE_BY_EMAIL, email);
         if (!rs.next()) return Optional.empty();
@@ -37,15 +38,18 @@ public class SQLRepository {
         return Optional.of(target);
     }
 
+
     public void registerUser(User user){
         String userId = UUID.randomUUID().toString().substring(0,8);
         template.update(SQL_REGISTER_USER, userId,  user.getName(), user.getEmail(), user.getPassword(), user.getTarget(), user.getRole().name());
     }
 
+
     public void insertNewDay(String dayid, Meal meal, String email){
         Optional<User> opt = findUserByEmail(email);
-        template.update(SQL_INSERT_NEW_DAY, dayid, meal.getTimestamp(), meal.getCalories(), opt.get().getUserId());
+        template.update(SQL_INSERT_NEW_DAY, dayid, meal.getTimestamp(), meal.calculateCalories(), opt.get().getUserId());
     }
+
 
     public Double findCaloriesByDayId(String dayId){
         SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAY_BY_DAY_ID, dayId);
@@ -53,11 +57,23 @@ public class SQLRepository {
         return rs.getDouble("calories");
     }
 
+
     public Double addCaloriesToDay(String dayId, Meal meal, Double intialCalories){
-        Double newCalories = meal.getCalories() + intialCalories;
+        Double newCalories = meal.calculateCalories() + intialCalories;
         template.update(SQL_UPDATE_DAY_CALORIES, newCalories, dayId);
         return newCalories;
     }
+
+
+    public void removeCaloriesFromDay(String dayId, Double calories){
+        template.update(SQL_UPDATE_DAY_CALORIES_REMOVE_MEAL, calories, dayId);
+    }
+
+
+    public void deleteDay(String dayId){
+        template.update(SQL_DELETE_DAY_BY_DAY_ID, dayId);
+    }
+
 
     public Optional<List<Day>> findDaysByEmail(String email, String startDate, String endDate){
         System.out.println(startDate + " " + endDate);
@@ -70,10 +86,9 @@ public class SQLRepository {
             Day newDay = Day.createDay(rs);
             dayList.add(newDay);
         }
-
         return Optional.of(dayList);
-
     }
+
 
     public Optional<String> findDayByEmailAndDay(String email, String date){
         SqlRowSet rs = template.queryForRowSet(SQL_FIND_DAY_BY_EMAIL_AND_DAY, email, date);
@@ -81,6 +96,7 @@ public class SQLRepository {
         String day_id = rs.getString("day_id");
 
         return Optional.of(day_id);
-
     }
+
+
 }

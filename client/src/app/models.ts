@@ -1,5 +1,4 @@
 export interface FoodData{
-
     name: string
     calories: number
     carbohydrates: number
@@ -27,6 +26,7 @@ export interface Meal{
     timestamp: Date
     meal_id?: string
     imageurl?: string
+    calories?: number
 }
 
 export interface DialogData{

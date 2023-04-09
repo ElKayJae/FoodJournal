@@ -63,6 +63,29 @@ export class ApiService {
        )
   }
 
+  
+  deleteMeal(meal_id: string, calories: number, day_id: string){
+    console.log(meal_id)
+    const queryParams =  new HttpParams()
+    .set('meal_id', meal_id)
+    .set('calories', calories)
+    .set('day_id', day_id)
+
+    return lastValueFrom(
+      this.httpClient.delete('/api/deletemeal', {headers: this.setHeaders(), params: queryParams})
+    )
+  }
+
+
+  deleteDay(day_id: string){
+    const queryParams =  new HttpParams()
+    .set('day_id', day_id)
+
+    return lastValueFrom(
+      this.httpClient.delete('/api/deleteday', {headers: this.setHeaders(), params: queryParams})
+    )
+  }
+
 
   getDays(startStr : string, endStr : string): Promise<Day[]> {
     const queryParams =  new HttpParams()

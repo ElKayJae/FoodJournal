@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
     this.form = this.createForm()
   }
 
+
   constructor(private fb : FormBuilder, private authService : AuthService){}
 
   createForm(){
@@ -25,10 +26,12 @@ export class LoginComponent implements OnInit {
     })
   }
 
+
   login(){
     this.authService.getJwtToken(this.form.value['email'], this.form.value['password'])
     
   }
+
 
   getErrorMessage() {
     if (this.form.get('email')?.hasError('required')) {
@@ -37,5 +40,6 @@ export class LoginComponent implements OnInit {
 
     return this.form.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
+  
   
 }

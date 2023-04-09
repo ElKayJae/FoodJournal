@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import com.mongodb.client.result.DeleteResult;
+
 import jakarta.json.Json;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
@@ -28,6 +30,7 @@ public class MongoRepository {
         template.insert(toInsert, C_MEALS);
     }
 
+
     public JsonArray getMealsByDayId(String dayid) {
         Criteria c = Criteria.where("day_id").is(dayid);
         Query q = Query.query(c);
@@ -39,4 +42,14 @@ public class MongoRepository {
         }
         return arrBuilder.build();
     }
+
+
+    public boolean deleteMeal(String mealid){
+        Criteria c = Criteria.where("meal_id").is(mealid);
+        Query q = Query.query(c);
+        DeleteResult result = template.remove(q, Document.class, C_MEALS);
+        return result.getDeletedCount() > 0;
+    }
+
+    
 }

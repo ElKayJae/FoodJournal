@@ -40,6 +40,7 @@ public class UserService {
         return sqlRepository.findDayByEmailAndDay(email, date);
     }
 
+
     public Optional<Integer> findTargetCalorieByEmail(String email) {
         return sqlRepository.findTargetCalorieByEmail(email);
     }
@@ -48,6 +49,7 @@ public class UserService {
     public void registerUser(User user) {
         sqlRepository.registerUser(user);
     }
+
 
     @Transactional
     public void insertMeal(Meal meal, String dayid, String email) throws Exception {
@@ -62,6 +64,19 @@ public class UserService {
             if (intialCalories < target && newCalories > target) System.out.println("exceeded calories");
         }
             mongoRepository.insertMeal(meal, dayid);
+    }
+
+
+    @Transactional
+    public void deleteMeal(String meal_id, Double calories, String day_id){
+        sqlRepository.removeCaloriesFromDay(day_id, calories);
+        mongoRepository.deleteMeal(meal_id);
+        imageRepository.deleteImage(meal_id);
+    }
+
+
+    public void deleteDay(String day_id){
+        sqlRepository.deleteDay(day_id);
     }
 
 
@@ -81,7 +96,10 @@ public class UserService {
         return Optional.of(arrBuilder.build());
     }
 
+
     public JsonArray getMealsByDayId(String day_id){
         return mongoRepository.getMealsByDayId(day_id);
     }
+
+    
 }
