@@ -40,7 +40,6 @@ export class RegisterComponent implements OnInit{
 
 
   register(){
-    this.submitted = true
     const user : User = {
       "name" : this.form.value['name'],
       "email" : this.form.value['email'],
@@ -79,7 +78,7 @@ export class RegisterComponent implements OnInit{
   back(){
     this.navService.back()
   }
-  
+
 }
 
 

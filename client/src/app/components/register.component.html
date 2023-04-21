@@ -53,10 +53,9 @@
                 </mat-form-field>
             </div>
     
-            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber() || submitted">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber()">
                 <mat-icon>app_registration</mat-icon>
-                <span *ngIf="submitted==false">Register</span>
-                <span *ngIf="submitted==true">Registering</span>
+                Register
             </button>
         </form>
     </div>

@@ -11,7 +11,6 @@ import jakarta.json.Json;
 import journal.server.config.JwtService;
 import journal.server.models.Role;
 import journal.server.models.User;
-import journal.server.repositories.SQLRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,12 +25,7 @@ public class AuthenticationService {
     public String register(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
-        // User.builder()
-        //             .name(user.getName())
-        //             .email(user.getEmail())
-        //             .password(passwordEncoder.encode(user.getPassword()))
-        //             .role(Role.USER)
-        //             .build();
+
         userService.registerUser(user);
 
         String jwtToken = jwtService.generateToken(user);
