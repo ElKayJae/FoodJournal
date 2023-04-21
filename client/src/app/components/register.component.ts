@@ -15,6 +15,7 @@ export class RegisterComponent implements OnInit{
 
   form! : FormGroup
   hide = true
+  submitted = false
 
   
   constructor(private fb : FormBuilder, private authService : 
@@ -24,6 +25,7 @@ export class RegisterComponent implements OnInit{
 
   ngOnInit(): void {
     this.form = this.createForm()
+    this.submitted = false
   }
 
 
@@ -32,12 +34,13 @@ export class RegisterComponent implements OnInit{
       name : this.fb.control('',[Validators.required]),
       email : this.fb.control('',[Validators.required, Validators.email]),
       password: this.fb.control('',[Validators.required]),
-      target: this.fb.control('', [Validators.required])
+      target: this.fb.control('', [Validators.required, Validators.min(10)])
     })
   }
 
 
   register(){
+    this.submitted = true
     const user : User = {
       "name" : this.form.value['name'],
       "email" : this.form.value['email'],
@@ -67,10 +70,16 @@ export class RegisterComponent implements OnInit{
   }
 
 
+  isNumber(){
+    if (Number.isNaN(Number(this.form.value['target']))) return false
+    else return true
+  }
+
+
   back(){
     this.navService.back()
   }
   
-
 }
+
 

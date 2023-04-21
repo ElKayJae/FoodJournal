@@ -1,12 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Calendar, CalendarOptions, DateSelectArg, EventApi, EventClickArg, EventInput, EventSourceFuncArg } from '@fullcalendar/core';
+import { Calendar, CalendarOptions, EventApi, EventClickArg, EventInput, EventSourceFuncArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Day } from '../models';
 import { ApiService } from '../services/api.service';
-import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -21,8 +20,10 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   @ViewChild('calendar')
   calender!: Calendar
   
-  constructor(private router: Router, private authService : AuthService, private navService: NavigationService, private apiService: ApiService) {
+  constructor(private router: Router, private navService: NavigationService,
+    private apiService: ApiService, private dialog: MatDialog) {
   }
+
 
   ngOnInit(): void {
     this.apiService.getTargetCalorie().then(
@@ -33,9 +34,11 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     })
   }
 
+
   ngAfterViewInit(): void {
     console.log("afterViewInit",this.calender)
   }
+
 
   currentEvents: EventApi[] = [];
 
@@ -64,36 +67,13 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   };
 
-  // eventSet(){
-  //   // console.log("eventSet")
-  // }
-  
+
   dateClicked(clickInfo: any){
     console.log("date clicked", clickInfo)
     this.router.navigate(['/upload' , clickInfo.dateStr])
 
   }
 
-  // handleDateSelect(selectInfo: DateSelectArg) {
-  //   const title = prompt('Please enter a new title for your event');
-  //   const calendarApi = selectInfo.view.calendar;
-
-  //   calendarApi.unselect(); // clear date selection
-
-  //   if (title) {
-  //     const event = {
-  //       id: this.createEventId(),
-  //       title,
-  //       start: selectInfo.startStr,
-  //       end: selectInfo.endStr,
-  //       allDay: selectInfo.allDay
-  //     }
-  //     calendarApi.addEvent(event);
-  //     const events : EventApi[] = calendarApi.getEvents()
-  //     console.log('date select')
-  //     events.forEach( e => console.log( e.title))
-  //   }
-  // }
 
   handleEventClick(clickInfo: EventClickArg) {
       // clickInfo.event.remove();
@@ -102,11 +82,6 @@ export class CalendarComponent implements OnInit, AfterViewInit{
       this.router.navigate(['/detail' ,  clickInfo.event.startStr ,clickInfo.event.extendedProps['day_id']])
   }
 
-  // handleEvents(events: EventApi[]) {
-  //   this.currentEvents = events;
-  //   this.changeDetector.detectChanges();
-  //   this.currentEvents.forEach( e => console.log( e.start))
-  // }
 
   loadEvents(args: EventSourceFuncArg) : Promise<EventInput[]> {
     return new Promise<EventInput[]> ((resolve) => {
@@ -132,4 +107,9 @@ export class CalendarComponent implements OnInit, AfterViewInit{
     this.navService.logout()
   }
 
+
+  updateCalories() {
+    this.router.navigate(['/updatetarget'])
+  }
+  
 }

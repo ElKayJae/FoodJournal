@@ -19,9 +19,27 @@ margin-bottom: 3em;
     padding: 0 3px;
 }
 
+.padding-r-5{
+    padding-right: 5px;
+}
+
 .container{
     height: 100vh;
     height: 100svh;
     display: flex;
     flex-flow: column;
+}
+
+.justify-center{
+    display: flex;
+    justify-content: center;
+}
+
+.expand-button{
+    width: 100%;
+}
+
+.align-center{
+    display: flex;
+    align-items: center;
 }

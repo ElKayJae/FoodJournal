@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -11,13 +13,16 @@ export class LoginComponent implements OnInit {
 
   form! : FormGroup
   hide = true
+  submitted = false
+  jwt = ''
 
   ngOnInit(): void {
     this.form = this.createForm()
+    this.submitted = false
   }
 
 
-  constructor(private fb : FormBuilder, private authService : AuthService){}
+  constructor(private fb : FormBuilder, private authService : AuthService, private router : Router, private snackBar : MatSnackBar){}
 
   createForm(){
     return this.fb.group({
@@ -28,7 +33,23 @@ export class LoginComponent implements OnInit {
 
 
   login(){
+    this.submitted = true
     this.authService.getJwtToken(this.form.value['email'], this.form.value['password'])
+    .then(
+      token => {
+        this.jwt = token['token']
+        localStorage.setItem('jwt', this.jwt)}
+        ).then(() => 
+        {
+          this.router.navigate([''])
+          this.snackBar.open(`logged in as ${this.form.value['email']}`, 'OK',{duration : 2000})
+
+        })
+        .catch(error => {
+          console.error(error)
+          this.submitted = false
+          this.snackBar.open(`incorrect credentials`,'DISMISS',{duration : 2000} )}
+          )
     
   }
 
@@ -40,6 +61,5 @@ export class LoginComponent implements OnInit {
 
     return this.form.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
-  
   
 }

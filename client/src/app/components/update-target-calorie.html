@@ -1,0 +1,36 @@
+<div class="container">
+
+  <mat-toolbar color="primary" class="header">
+      <mat-toolbar-row class="padding-3" >
+          <button mat-icon-button type="button" (click)="back()">
+              <div class="icon">
+                  <mat-icon>arrow_back</mat-icon>
+              </div>
+          </button>
+          <mat-icon class="padding-r-5">set_meal</mat-icon>
+          <span>Calorie Journal</span>
+      </mat-toolbar-row>
+  </mat-toolbar>
+  
+  <div class="content justify-center">
+    <div>
+      <div class="mb-3 mt-3">
+        Current Target Calories: <b>{{ target }}</b>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div>
+          <mat-form-field appearance="fill"  [style.width.px]="248">
+              <mat-label>New Target Calorie</mat-label>
+              <input matInput placeholder="2000" formControlName="calorie" required>
+              <span matTextSuffix>kcal</span>
+              <mat-error *ngIf="form.invalid">please enter your calorie target</mat-error>
+          </mat-form-field>
+        </div>
+    
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber()">Submit</button>
+      </form>
+    </div>
+
+  </div>
+
+</div>

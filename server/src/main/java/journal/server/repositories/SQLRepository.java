@@ -38,6 +38,11 @@ public class SQLRepository {
         return Optional.of(target);
     }
 
+    public boolean updateTargetCalorieByEmail(String email, int target){
+        int rows = template.update(SQL_UPDATE_TARGET_CALORIES, target, email);
+        return rows > 0;
+    }
+
 
     public void registerUser(User user){
         String userId = UUID.randomUUID().toString().substring(0,8);

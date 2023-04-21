@@ -1,13 +1,23 @@
 <div>
-    <button mat-raised-button  [matMenuTriggerFor]="menu" #menuTrigger class="mb" color="primary" type="button">Upload Image</button>
+    <button mat-raised-button  [matMenuTriggerFor]="menu" #menuTrigger class="mb" color="primary" type="button">
+        Upload Image
+        <mat-icon>upload</mat-icon>
+    </button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="imageFileInput.click()">Upload File</button>
+        <button mat-menu-item (click)="imageFileInput.click()">
+            Upload File
+            <mat-icon>upload_file</mat-icon>
+        </button>
         <input hidden type="file" (change)="selectImage($event)" #imageFileInput >
-        <button mat-menu-item (click)="showCamera()">Open Camera</button>
+        <button mat-menu-item (click)="showCamera()">
+            Open Camera
+            <mat-icon>camera_alt</mat-icon>
+        </button>
     </mat-menu>
 </div>
 
 <div *ngIf="showWebcam" >
+
     <div class="mb">
         <webcam [width]="webCamWidth" [trigger]="trigger" (imageCapture)="capture($event)"
                 [allowCameraSwitch]="true" [switchCamera]="nextWebcamObservable"
@@ -16,8 +26,14 @@
     </div>
 
     <div>
-        <button mat-raised-button class="mb mr" color="primary" type="button" (click)="snap()">Snap</button>
-        <button mat-raised-button class="mb mr" color="warn" type="button" (click)="closeWebcam()">Cancel</button>
+        <button mat-raised-button class="mb mr" color="primary" type="button" (click)="snap()">
+            Snap
+            <mat-icon>camera</mat-icon>
+        </button>
+        <button mat-raised-button class="mb mr" color="warn" type="button" (click)="closeWebcam()">
+            Cancel
+            <mat-icon>cancel</mat-icon>
+        </button>
         <button *ngIf="multipleWebcamsAvailable" mat-raised-button class="mb" color="primary" (click)="showNextWebcam(true)" >Switch</button>
     </div>
     
@@ -26,9 +42,12 @@
 <img *ngIf="showFile" [src]="url" class="imageUpload mb">
 
 <div *ngIf="retake">
-    <button mat-raised-button class="mb mr" color="primary" type="button" (click)="retake=false">Done</button>
-    <button mat-raised-button class="mb" color="accent" type="button" (click)="showCamera()">Retake</button>
+    <button mat-raised-button class="mb mr" color="primary" type="button" (click)="retake=false">
+        Done
+        <mat-icon>done</mat-icon>
+    </button>
+    <button mat-raised-button class="mb" color="accent" type="button" (click)="showCamera()">
+        Retake
+        <mat-icon>undo</mat-icon>
+    </button>
 </div>
-
-
-

@@ -9,6 +9,7 @@ public class Queries {
     public static final String SQL_FIND_DAYS_BY_EMAIL = "select day_id, day, calories from days join users on days.user_id = users.user_id where users.email=? and day between ? and ?";
     public static final String SQL_FIND_DAY_BY_EMAIL_AND_DAY = "select day_id from days join users on days.user_id = users.user_id where users.email=? and day=?";
     public static final String SQL_UPDATE_DAY_CALORIES = "update days set calories=? where day_id=?";
+    public static final String SQL_UPDATE_TARGET_CALORIES = "update users set target=? where email=?";
     public static final String SQL_UPDATE_DAY_CALORIES_REMOVE_MEAL = "update days set calories = calories -? where day_id=?";
     public static final String SQL_DELETE_DAY_BY_DAY_ID = "delete from days where day_id=?";
 }

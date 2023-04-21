@@ -7,12 +7,12 @@
                     <mat-icon>arrow_back</mat-icon>
                 </div>
             </button>
-
+            <mat-icon class="padding-r-5">set_meal</mat-icon>
             <span>Calorie Journal</span>
         </mat-toolbar-row>
     </mat-toolbar>
     
-    <div class="content">
+    <div class="content justify-center">
         <form [formGroup]="form" (ngSubmit)="register()">
         
             <div>
@@ -53,7 +53,11 @@
                 </mat-form-field>
             </div>
     
-            <button mat-raised-button color="primary" type="submit">Register</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber() || submitted">
+                <mat-icon>app_registration</mat-icon>
+                <span *ngIf="submitted==false">Register</span>
+                <span *ngIf="submitted==true">Registering</span>
+            </button>
         </form>
     </div>
 

@@ -17,7 +17,6 @@
 .imageUpload{
     max-width: 100%;
     max-height: 500px;
-    
 }
 
 .content{
@@ -82,5 +81,10 @@
 
 .spacer {
     flex: 1 1 auto;
-  }
+}
+
+.justify-center{
+    display: flex;
+    justify-content: center;
+}
   

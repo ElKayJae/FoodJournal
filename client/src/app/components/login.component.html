@@ -2,39 +2,55 @@
 
     <mat-toolbar color="primary" class="header">
         <mat-toolbar-row>
+            <mat-icon class="padding-r-5">set_meal</mat-icon>
             <span>Calorie Journal</span>
         </mat-toolbar-row>
     </mat-toolbar>
     
-    <div class="content">
-    
-        <form [formGroup]="form" (ngSubmit)="login()" class="mb-3">
-        
-            <div>
-                <mat-form-field appearance="fill" [style.width.px]="248">
-                    <mat-label>Enter your email</mat-label>
-                    <input matInput placeholder="pat@example.com" formControlName="email" required>
-                    <mat-error *ngIf="form.get('email')?.invalid">{{getErrorMessage()}}</mat-error>
-                </mat-form-field>
-            </div>
-            
-            <div>
-                <mat-form-field appearance="fill">
-                    <mat-label>Enter your password</mat-label>
-                    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-                    <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                    </button>
-                  </mat-form-field>
-            </div>
-            <button mat-raised-button color="primary" type="submit">Login</button>
-        </form>
-
+    <div class="justify-center">
         <div>
-            <p>Dont have an account?</p>
-            <button mat-raised-button color="primary" type="button" [routerLink]="['/register']">Register</button>
+            <div class="content">
+                <form [formGroup]="form" (ngSubmit)="login()" class="mb-3">
+                
+                    <div>
+                        <mat-form-field appearance="fill" [style.width.px]="248">
+                            <mat-label>Enter your email</mat-label>
+                            <input matInput placeholder="pat@example.com" formControlName="email" required>
+                            <mat-error *ngIf="form.get('email')?.invalid">{{getErrorMessage()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    
+                    <div>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter your password</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                            <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                          </mat-form-field>
+                    </div>
+                    <div>
+                        <button class="expand-button" mat-raised-button color="primary" type="submit" [disabled]="submitted">
+                            <mat-icon>login</mat-icon>
+                            <span *ngIf="submitted==false">Login</span>
+                            <span *ngIf="submitted==true">Logging in</span>
+                        </button>
+                    </div>
+                </form>
+        
+                <div class="justify-center">
+                    <p>Don't have an account?</p>
+                </div>
+                <div class="justify-center">
+                    <button mat-raised-button color="primary" type="button" [routerLink]="['/register']">
+                        Register 
+                        <mat-icon>app_registration</mat-icon>
+                    </button>
+                </div>
+            </div>
         </div>
-
     </div>
 
 </div>
+
+

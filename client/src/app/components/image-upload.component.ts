@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { WebcamInitError, WebcamImage, WebcamUtil, WebcamComponent } from 'ngx-webcam';
+import { Component, HostListener, ViewChild } from '@angular/core';
+import { WebcamInitError, WebcamImage, WebcamComponent } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
 import { TempStorageService } from '../services/temp-storage.service';
 
@@ -32,8 +32,11 @@ export class ImageUploadComponent {
     this.setWebcamWidth()
   }
 
+
   ngOnInit(): void {
+    this.tempStorage.setImage(null)
   }
+
 
   @HostListener('window:resize', ['$event'])
   setWebcamWidth(){
@@ -61,11 +64,13 @@ export class ImageUploadComponent {
     event.target.value = ""
   }
 
+
   showCamera(){
     this.showWebcam = true
     this.showFile = false
     this.retake = false
   }
+
 
   snap(): void {
     this.showWebcam = false
@@ -73,19 +78,23 @@ export class ImageUploadComponent {
     this.trigger.next()
   }
 
+
   closeWebcam(): void {
-    this.showWebcam = !this.showWebcam
+    this.showWebcam = false
     this.retake =  false
     this.showFile = true
   }
+
 
   handleInitError(error: WebcamInitError): void {
     this.errors.push(error);
   }
 
+
   showNextWebcam(directionOrDeviceId: boolean|string): void {
     this.nextWebcam.next(directionOrDeviceId)
   }
+
 
   capture(webcamImage: WebcamImage): void {
     console.info('received webcam image', webcamImage)
@@ -95,9 +104,11 @@ export class ImageUploadComponent {
     this.showFile = true
   }
 
+
   public get nextWebcamObservable(): Observable<boolean|string> {
     return this.nextWebcam.asObservable()
   }
+
 
   dataURItoBlob(dataURI: string) {
     // convert base64 to raw binary data held in a string
@@ -115,6 +126,5 @@ export class ImageUploadComponent {
 
     return new Blob([ab], {type: mimeString})
   }
-
 
 }

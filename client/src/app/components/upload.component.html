@@ -6,7 +6,6 @@
                     <mat-icon>arrow_back</mat-icon>
                 </div>
             </button>
-            <span>Calorie Journal</span>
             <span class="spacer"></span>
             <span>{{ day | date :'mediumDate'}}</span>
             <span class="spacer"></span>
@@ -18,13 +17,13 @@
         </mat-toolbar-row>
     </mat-toolbar>
 
-    <div class="content">
+    <div class="content justify-center">
         
         <form [formGroup]="form" (ngSubmit)="process()">
-
-
-            <ngx-mat-timepicker-field [format]="12" [defaultTime]="'11:11 PM'" formControlName="time"></ngx-mat-timepicker-field>
-
+            <div>
+                <ngx-mat-timepicker-field [format]="12" [defaultTime]="'11:11 PM'" formControlName="time"></ngx-mat-timepicker-field>
+            </div>
+            
             <mat-form-field appearance="fill">
                 <mat-label>Meal Category</mat-label>
                 <mat-select formControlName="meal">
@@ -44,7 +43,11 @@
             <app-search></app-search>
 
             <div>
-                <button mat-raised-button color="primary" type="submit" [disabled]="submitDisabled() || form.invalid">Submit</button>
+                <button mat-raised-button color="primary" type="submit" [disabled]="submitDisabled() || form.invalid || submitted">
+                    <mat-icon>send</mat-icon>
+                    <span *ngIf="submitted==false">Submit</span>
+                    <span *ngIf="submitted==true">Submitting</span>
+                </button>
             </div>
 
 

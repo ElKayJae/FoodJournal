@@ -23,6 +23,8 @@ export class SearchComponent {
     this.form = this.createForm()
     
   }
+
+
   createForm(){
   
     return this.fb.group({
@@ -30,10 +32,12 @@ export class SearchComponent {
     })
   }
 
+
   clearValue(controlName: string){
     this.form.get(controlName)?.reset()
   }
   
+
   searchFood(){
     const query = this.form.value['search']
     this.apiService.searchFoodData(query).then(
@@ -49,8 +53,10 @@ export class SearchComponent {
         .catch( error => console.error(error))
   }
 
+
   removeFood(i :number){
     this.foodList.splice(i,1)
     this.tempStorage.setfoodList(this.foodList)
   }
+  
 }

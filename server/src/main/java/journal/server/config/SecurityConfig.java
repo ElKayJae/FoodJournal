@@ -22,8 +22,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-        .authorizeHttpRequests().requestMatchers("/api/auth/**")
+        httpSecurity.cors().and().csrf().disable()
+        .authorizeHttpRequests().requestMatchers(
+            "/api/auth/**", "/index.html", "/", "/3rdpartylicenses.txt", "/favicon.ico",
+            "/main.358c20b840cb2a82.js", "/polyfills.be126616119fee81.js","/runtime.7ae29a296d479790.js",
+            "/scripts.b7cebc1258dbcca8.js","/styles.7a21ac1018e81662.css","/manifest.json", "/images/**")
         .permitAll().anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().authenticationProvider(authenticationProvider)

@@ -30,6 +30,9 @@ public class UserService {
     @Autowired
     ImageRepository imageRepository;
 
+    @Autowired
+    EmailSenderService emailSender;
+
 
     public Optional<User> findUserByEmail(String email) {
         return sqlRepository.findUserByEmail(email);
@@ -45,25 +48,44 @@ public class UserService {
         return sqlRepository.findTargetCalorieByEmail(email);
     }
 
+    public boolean updateTargetCalorieByEmail(String email, int target) {
+        return sqlRepository.updateTargetCalorieByEmail(email, target);
+    }
+
 
     public void registerUser(User user) {
+        String subject = "Calorie Journal - Account Created Successfully";
+        String message = "Thank you for registering with us. \n https://caloriejournal.up.railway.app/";
+        emailSender.sendEmail(user.getEmail(), subject, message);
         sqlRepository.registerUser(user);
     }
 
 
     @Transactional
     public void insertMeal(Meal meal, String dayid, String email) throws Exception {
+        int target = sqlRepository.findTargetCalorieByEmail(email).get();
         if (dayid.equals("")){
             dayid = UUID.randomUUID().toString().substring(0,8);
+            Double mealCalories = meal.calculateCalories();
             sqlRepository.insertNewDay(dayid, meal, email);
+            if (mealCalories > target){
+                System.out.println("exceeded calories");
+                String subject = "Daily Calorie Exceeded";
+                String message = ("Daily calorie count %.2f kcal exceeded target calorie of %s kcal").formatted(mealCalories, target);
+                emailSender.sendEmail(email, subject, message);
+            }
         } else {
-            int target = sqlRepository.findTargetCalorieByEmail(email).get();
             Double intialCalories = sqlRepository.findCaloriesByDayId(dayid);
             Double newCalories = sqlRepository.addCaloriesToDay(dayid, meal, intialCalories);
 
-            if (intialCalories < target && newCalories > target) System.out.println("exceeded calories");
+            if (intialCalories < target && newCalories > target) {
+                System.out.println("exceeded calories");
+                String subject = "Daily Calorie Exceeded";
+                String message = ("Daily calorie count %.2f kcal exceeded target calorie of %s kcal").formatted(newCalories, target);
+                emailSender.sendEmail(email, subject, message);
+            }
         }
-            mongoRepository.insertMeal(meal, dayid);
+        mongoRepository.insertMeal(meal, dayid);
     }
 
 

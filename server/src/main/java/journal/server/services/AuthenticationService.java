@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
-    private final SQLRepository repository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -32,7 +32,7 @@ public class AuthenticationService {
         //             .password(passwordEncoder.encode(user.getPassword()))
         //             .role(Role.USER)
         //             .build();
-        repository.registerUser(user);
+        userService.registerUser(user);
 
         String jwtToken = jwtService.generateToken(user);
 
@@ -44,7 +44,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
-        Optional<User> opt = repository.findUserByEmail(user.getEmail());
+        Optional<User> opt = userService.findUserByEmail(user.getEmail());
         String jwtToken = jwtService.generateToken(opt.get());
 
         return Json.createObjectBuilder().add("token", jwtToken).build().toString();

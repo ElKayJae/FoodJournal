@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,6 @@ public class FoodJournalController {
     @ResponseBody
     @GetMapping (path= "/search")
     public ResponseEntity<String> getFoodData(@RequestParam(required=true) String query){
-
         Optional<JsonArray> opt = foodDataService.getFoodDataList(query);
         JsonArray arr = opt.get();
 
@@ -73,6 +73,18 @@ public class FoodJournalController {
         Optional<Integer> opt = userService.findTargetCalorieByEmail(username);
         System.out.println(opt.get());
         return ResponseEntity.ok().body(Json.createObjectBuilder().add("target", opt.get()).build().toString());
+    }
+
+
+    @ResponseBody
+    @PutMapping (path= "/target")
+    public ResponseEntity<String> updateTargetCalorie(@RequestHeader HttpHeaders header, @RequestParam Integer target ){
+        String value = header.getFirst("Authorization").substring(7);
+        String username = jwtService.extractUsername(value);
+        boolean updated = userService.updateTargetCalorieByEmail(username, target);
+        if (!updated) 
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Json.createObjectBuilder().add("error", "unable to update").build().toString());
+        return ResponseEntity.ok().body(Json.createObjectBuilder().add("message", "updated").build().toString());
     }
 
 

@@ -18,6 +18,7 @@ export class NavigationService {
     });
    }
 
+
   back(): void {
     this.history.pop();
     if (this.history.length > 0) {
@@ -27,8 +28,10 @@ export class NavigationService {
     }
   }
   
+
   logout(){
     localStorage.removeItem('jwt')
     this.router.navigate(['/login'])
   }
+  
 }

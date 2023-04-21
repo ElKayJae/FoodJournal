@@ -15,6 +15,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient, private router : Router, private snackBar : MatSnackBar) {}
 
+  
   authenticate(){
     const jwt = localStorage.getItem('jwt')
     console.log("authenticating...")
@@ -27,26 +28,19 @@ export class AuthService {
       })
   }
 
+
   getJwtToken(username: string, password: string) {
     const credentials  = {
       "email" : username,
       "password" : password
     }
-    lastValueFrom(this.httpClient.post<any>('/api/auth/login', credentials)).then(
-      token => {
-        this.jwt = token['token']
-        localStorage.setItem('jwt', this.jwt)}
-        ).then(() => 
-        {
-          this.router.navigate([''])
-          this.snackBar.open(`logged in as ${username}`, 'OK',{duration : 2000})
+    return lastValueFrom(this.httpClient.post<any>('/api/auth/login', credentials))
 
-        })
-        .catch(error => {
-          console.error(error)})
   }
+
 
   register(user : User) : Promise<any> {
     return lastValueFrom(this.httpClient.post<any>('/api/auth/register', user))
   }
+
 }

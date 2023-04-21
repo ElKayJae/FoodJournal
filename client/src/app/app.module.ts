@@ -17,6 +17,7 @@ import { ImageUploadComponent } from './components/image-upload.component';
 import { WebcamModule } from 'ngx-webcam';
 import { LoginComponent } from './components/login.component';
 import { RegisterComponent } from './components/register.component';
+import { UpdateTargetCalorie } from './components/update-target-calorie.component';
 
 
 const appRoutes: Routes = [
@@ -24,6 +25,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'register', component: RegisterComponent},
   { path: 'upload/:day', component: UploadComponent},
+  { path: 'updatetarget', component: UpdateTargetCalorie},
   { path: 'detail/:day/:id', component: DetailComponent},
   { path: '**', redirectTo: 'create', pathMatch: 'full'}
 ]
@@ -38,7 +40,8 @@ const appRoutes: Routes = [
     ImageUploadComponent,
     LoginComponent,
     RegisterComponent,
-    DialogConfirmation
+    DialogConfirmation,
+    UpdateTargetCalorie
   ],
   imports: [
     BrowserModule,

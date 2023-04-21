@@ -1,6 +1,17 @@
 <mat-toolbar color="primary" class="mb">
-    <mat-toolbar-row class="padding-r-3">
-        <span> Home </span>
+    <mat-toolbar-row class="padding-3">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="updateCalories()">
+                <mat-icon>edit</mat-icon>
+                <span>edit target calorie</span>
+            </button>
+        </mat-menu>
+        <span class="spacer"></span>
+        <mat-icon class="padding-r-5">set_meal</mat-icon>
+        <span>Calorie Journal</span>
 
         <span class="spacer"></span>
         <button mat-icon-button type="button" (click)="logout()">
@@ -18,7 +29,7 @@
         <!-- custom properties are held in extendedProps -->
     
            <!-- <p> {{arg.event.startStr | date:'shortTime' }} </p> -->
-           <b> {{ arg.event.extendedProps.calories}} </b>
+           <b> {{ arg.event.extendedProps.calories | number: '1.0-0'}} </b>
            
     </ng-template>
     </full-calendar>

@@ -9,13 +9,17 @@ export class TempStorageService {
   foodList!: FoodData[]
   imageBlob!: Blob | null
   
+
   constructor() { }
+
 
   setfoodList(foodList :FoodData[]){
     this.foodList = foodList
   }
 
+
   setImage(image: Blob|null){
     this.imageBlob = image
   }
+
 }

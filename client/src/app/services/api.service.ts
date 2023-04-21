@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { Day, Meal } from '../models';
 import { TempStorageService } from './temp-storage.service';
 
@@ -14,7 +14,7 @@ export class ApiService {
   setHeaders(){
     const jwt = localStorage.getItem('jwt')
     const headers = new HttpHeaders()
-    .set('Authorization', `Bearer ${jwt}`)
+      .set('Authorization', `Bearer ${jwt}`)
 
     return headers
   }
@@ -31,7 +31,7 @@ export class ApiService {
 
   searchDay(day: string) : Promise<any> {
     const queryParams =  new HttpParams()
-    .set('date', day)
+      .set('date', day)
 
     return lastValueFrom(
       this.httpClient.get('/api/searchday', {params: queryParams, headers: this.setHeaders()}))
@@ -41,6 +41,14 @@ export class ApiService {
   getTargetCalorie(){
     return lastValueFrom(
       this.httpClient.get<any>('/api/target', {headers: this.setHeaders()}))
+  }
+
+
+  updateTargetCalorie(target: number){
+    const queryParams =  new HttpParams()
+      .set('target', target)
+    return lastValueFrom(
+      this.httpClient.put<any>('/api/target', null, {headers: this.setHeaders(), params: queryParams}))
   }
 
 
@@ -67,9 +75,9 @@ export class ApiService {
   deleteMeal(meal_id: string, calories: number, day_id: string){
     console.log(meal_id)
     const queryParams =  new HttpParams()
-    .set('meal_id', meal_id)
-    .set('calories', calories)
-    .set('day_id', day_id)
+      .set('meal_id', meal_id)
+      .set('calories', calories)
+      .set('day_id', day_id)
 
     return lastValueFrom(
       this.httpClient.delete('/api/deletemeal', {headers: this.setHeaders(), params: queryParams})
@@ -79,7 +87,7 @@ export class ApiService {
 
   deleteDay(day_id: string){
     const queryParams =  new HttpParams()
-    .set('day_id', day_id)
+      .set('day_id', day_id)
 
     return lastValueFrom(
       this.httpClient.delete('/api/deleteday', {headers: this.setHeaders(), params: queryParams})
@@ -89,8 +97,8 @@ export class ApiService {
 
   getDays(startStr : string, endStr : string): Promise<Day[]> {
     const queryParams =  new HttpParams()
-    .set('start', startStr)
-    .set('end', endStr)
+      .set('start', startStr)
+      .set('end', endStr)
     return lastValueFrom(
       this.httpClient.get<Day[]>('/api/getdays', {headers: this.setHeaders(), params: queryParams})
       )
@@ -99,10 +107,11 @@ export class ApiService {
 
   getMealsByDayId(day_id: string){
     const queryParams =  new HttpParams()
-    .set('day_id', day_id)
+      .set('day_id', day_id)
 
     return lastValueFrom(
       this.httpClient.get<Meal[]>('/api/getmeals' , {headers: this.setHeaders(), params: queryParams})
     )
   }
+  
 }

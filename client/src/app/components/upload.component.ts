@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FoodData, Meal } from '../models';
+import { FoodData } from '../models';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
@@ -20,16 +20,20 @@ export class UploadComponent implements OnInit{
   url : any
   foodList: FoodData[] = this.tempStorage.foodList
   day_id!: string
+  submitted = false
+
 
   constructor(private activatedRoute: ActivatedRoute, private fb: FormBuilder, 
     private tempStorage: TempStorageService, private authService: AuthService,
     private navService: NavigationService, private apiService: ApiService,
     private router: Router){}
 
+
   ngOnInit(): void {
     this.authService.authenticate()
     const dayString = this.activatedRoute.snapshot.params['day']
     this.day = new Date(dayString)
+    this.submitted = false
     this.apiService.searchDay(dayString).then(v => {
       this.day_id = v['day_id']
       console.log("day_id: "+this.day_id)
@@ -52,6 +56,7 @@ export class UploadComponent implements OnInit{
 
 
   process(){
+    this.submitted = true
     const configTime = this.processTime()
     console.log("submit form")
     const meal = {
@@ -87,11 +92,14 @@ export class UploadComponent implements OnInit{
     return true
   }
   
+
   back(){
     this.navService.back()
   }
 
+
   logout(){
     this.navService.logout()
   }
+  
 }
