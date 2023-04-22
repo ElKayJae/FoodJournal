@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -33,7 +34,7 @@ public class MongoRepository {
 
     public JsonArray getMealsByDayId(String dayid) {
         Criteria c = Criteria.where("day_id").is(dayid);
-        Query q = Query.query(c);
+        Query q = Query.query(c).with(Sort.by(Sort.Direction.ASC, "timestamp"));
         List<Document> docList = template.find(q, Document.class, C_MEALS);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (Document d : docList){

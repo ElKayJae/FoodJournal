@@ -79,7 +79,10 @@ export class UploadComponent implements OnInit{
     let splitString = this.form.value['time'].split(/:| /)
     const period = splitString.pop()
     let numArray : number[] = splitString.map((v:string) => Number(v))
-    if( period === 'PM' ) numArray[0] += 12
+    if( period === 'PM' ) {
+      numArray[0] %= 12
+      numArray[0] += 12
+    }
     const configTime = new Date(this.day.getFullYear(), this.day.getMonth(), 
                         this.day.getDate(), numArray[0], numArray[1])
 
