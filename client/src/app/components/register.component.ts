@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit{
   register(){
     const user : User = {
       "name" : this.form.value['name'],
-      "email" : this.form.value['email'],
+      "email" : this.form.value['email'].toLowerCase(),
       "password" : this.form.value['password'],
       "target" : this.form.value['target']
     }

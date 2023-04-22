@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
 
   login(){
     this.submitted = true
-    this.authService.getJwtToken(this.form.value['email'], this.form.value['password'])
+    this.authService.getJwtToken(this.form.value['email'].toLowerCase(), this.form.value['password'])
     .then(
       token => {
         this.jwt = token['token']
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         ).then(() => 
         {
           this.router.navigate([''])
-          this.snackBar.open(`logged in as ${this.form.value['email']}`, 'OK',{duration : 2000})
+          this.snackBar.open(`logged in as ${this.form.value['email'].toLowerCase()}`, 'OK',{duration : 2000})
 
         })
         .catch(error => {

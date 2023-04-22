@@ -17,9 +17,8 @@ WORKDIR /app
 COPY server/mvnw .
 COPY server/mvnw.cmd .
 COPY server/pom.xml .
-COPY server/src src
-COPY --from=angularBuilder app/dist/client server/src/main/resources/static
-COPY --from=angularBuilder app/dist/client/images/icons server/src/main/resources/static/images/icons
+COPY server/src ./src
+COPY --from=angularBuilder /app/dist/client ./src/main/resources/static
 
 RUN mvn package -Dmaven.test.skip=true
 
