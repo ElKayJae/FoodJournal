@@ -52,9 +52,10 @@ export class ApiService {
   }
 
 
-  addMeal(meal: Meal, day_id: string){
+  addMeal(meal: Meal, day_id: string, dayString: string){
     const queryParams =  new HttpParams()
       .set('day_id', day_id)
+      .set('day_string', dayString)
 
     let formdata = new FormData()
     if (this.tempStorage.imageBlob != null)

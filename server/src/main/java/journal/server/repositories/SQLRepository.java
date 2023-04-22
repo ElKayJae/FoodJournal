@@ -50,9 +50,9 @@ public class SQLRepository {
     }
 
 
-    public void insertNewDay(String dayid, Meal meal, String email){
+    public void insertNewDay(String dayid, Meal meal, String email, String dayString){
         Optional<User> opt = findUserByEmail(email);
-        template.update(SQL_INSERT_NEW_DAY, dayid, meal.getTimestamp(), meal.calculateCalories(), opt.get().getUserId());
+        template.update(SQL_INSERT_NEW_DAY, dayid, dayString, meal.calculateCalories(), opt.get().getUserId());
     }
 
 

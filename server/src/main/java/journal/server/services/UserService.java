@@ -62,12 +62,12 @@ public class UserService {
 
 
     @Transactional
-    public void insertMeal(Meal meal, String dayid, String email) throws Exception {
+    public void insertMeal(Meal meal, String dayid, String email, String dayString) throws Exception {
         int target = sqlRepository.findTargetCalorieByEmail(email).get();
         if (dayid.equals("")){
             dayid = UUID.randomUUID().toString().substring(0,8);
             Double mealCalories = meal.calculateCalories();
-            sqlRepository.insertNewDay(dayid, meal, email);
+            sqlRepository.insertNewDay(dayid, meal, email, dayString);
             if (mealCalories > target){
                 System.out.println("exceeded calories");
                 String subject = "Daily Calorie Exceeded";

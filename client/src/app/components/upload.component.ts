@@ -21,6 +21,7 @@ export class UploadComponent implements OnInit{
   foodList: FoodData[] = this.tempStorage.foodList
   day_id!: string
   submitted = false
+  dayString!: string
 
 
   constructor(private activatedRoute: ActivatedRoute, private fb: FormBuilder, 
@@ -31,10 +32,10 @@ export class UploadComponent implements OnInit{
 
   ngOnInit(): void {
     this.authService.authenticate()
-    const dayString = this.activatedRoute.snapshot.params['day']
-    this.day = new Date(dayString)
+    this.dayString = this.activatedRoute.snapshot.params['day']
+    this.day = new Date(this.dayString)
     this.submitted = false
-    this.apiService.searchDay(dayString).then(v => {
+    this.apiService.searchDay(this.dayString).then(v => {
       this.day_id = v['day_id']
       console.log("day_id: "+this.day_id)
     })
@@ -64,7 +65,7 @@ export class UploadComponent implements OnInit{
       timestamp : configTime,
       category : this.form.value['meal']
     }
-    this.apiService.addMeal(meal, this.day_id)
+    this.apiService.addMeal(meal, this.day_id, this.dayString)
       .then(() => {
         this.router.navigate(['/'])
         this.tempStorage.setImage(null)

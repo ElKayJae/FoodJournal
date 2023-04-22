@@ -75,7 +75,7 @@
 }
 
 .card-image{
-    height: 50svw;
+    height: 60svw;
     width: auto;
     object-fit: cover;
 }
@@ -102,7 +102,7 @@
     }
 
     .card-image{
-        height: 300px;
+        height: 500px;
         width: 500px;
         object-fit: cover;
     }

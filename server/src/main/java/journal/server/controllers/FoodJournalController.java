@@ -125,11 +125,12 @@ public class FoodJournalController {
 
     @ResponseBody
     @PostMapping (path = "/addmeal")
-    public ResponseEntity<String> addMeal(@RequestHeader HttpHeaders header, @RequestBody Meal meal, @RequestParam String day_id){
+    public ResponseEntity<String> addMeal(@RequestHeader HttpHeaders header, @RequestBody Meal meal,
+        @RequestParam String day_id, @RequestParam String day_string){
         String value = header.getFirst("Authorization").substring(7);
         String username = jwtService.extractUsername(value);
         try {
-            userService.insertMeal(meal, day_id, username);
+            userService.insertMeal(meal, day_id, username, day_string);
         } catch (Exception e) {
             userService.deleteImage(meal.getMeal_id());
         }
