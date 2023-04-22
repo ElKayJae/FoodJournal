@@ -5,6 +5,7 @@ import { DialogData, Meal } from '../models';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-detail',
@@ -58,6 +59,23 @@ export class DetailComponent implements OnInit{
         }
         else console.log("cancelled")
       });
+  }
+
+  date(date: Date){
+    const dateString = date.toString(); // Replace with your date string
+    
+    // Parse the date string with Moment.js
+    const momentObj = moment(dateString, 'ddd MMM DD HH:mm:ss zzz YYYY');
+
+    // Get the time zone offset in minutes
+    const timeZoneOffset = momentObj.utcOffset();
+
+    // Convert the moment object to a Date object with the correct UTC offset
+    const dateObj = momentObj.utcOffset(timeZoneOffset).toDate();
+
+    console.log(dateObj);
+
+    return dateObj
   }
   
 

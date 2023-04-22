@@ -22,7 +22,7 @@
             <mat-card class="mb meal-card tile-margin">
                 <mat-card-header class="space-apart">
                     <mat-card-title>{{meal.category | titlecase}} ({{meal.calories | number:'1.0-0'}} kcal)</mat-card-title>
-                    <mat-card-subtitle> {{meal.timestamp}} {{meal.meal_id}} </mat-card-subtitle>
+                    <mat-card-subtitle> {{ date(meal.timestamp) | date:'HH:mm z'}} &nbsp; &nbsp;{{meal.meal_id}}  </mat-card-subtitle>
                     <button matSuffix mat-icon-button aria-label="Delete" type="button" (click)="deleteMeal(meal)">
                         <mat-icon>delete_outline</mat-icon>
                     </button>
