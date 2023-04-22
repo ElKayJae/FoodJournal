@@ -14,7 +14,7 @@
   
   <div class="content justify-center">
     <div>
-      <div class="mb-3 mt-3">
+      <div class="mb mt">
         Current Target Calories: <b>{{ target }}</b>
       </div>
       <form [formGroup]="form" (ngSubmit)="submit()">
@@ -27,7 +27,11 @@
           </mat-form-field>
         </div>
     
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber()">Submit</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || !isNumber() || submitted">
+          <mat-icon>send</mat-icon>
+          <span *ngIf="submitted==false">Submit</span>
+          <span *ngIf="submitted==true">Submitting</span>
+        </button>
       </form>
     </div>
 

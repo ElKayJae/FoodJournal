@@ -13,11 +13,13 @@ export class UpdateTargetCalorie implements OnInit{
 
   form! : FormGroup
   target! : number
+  submitted = false
 
   constructor(private fb: FormBuilder, private apiService: ApiService, private navService: NavigationService, private router: Router) {}
 
 
   ngOnInit(): void {
+    this.submitted = false
     this.apiService.getTargetCalorie().then(
       v => {
         this.target = v['target']
@@ -44,10 +46,14 @@ export class UpdateTargetCalorie implements OnInit{
 
 
   submit(){
+      this.submitted = true
       const target: number = this.form.value['calorie']
       this.apiService.updateTargetCalorie(target).then(
         () => this.router.navigate(['/'])
-      ).catch(error => console.error('error', error))
+      ).catch(error => {
+        this.submitted = false
+        console.error('error', error)
+      })
   }
 
 
