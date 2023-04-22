@@ -61,21 +61,14 @@ export class DetailComponent implements OnInit{
       });
   }
 
+
   date(date: Date){
-    const dateString = date.toString(); // Replace with your date string
+    const dateString = date.toString();
+    if (dateString.includes('UTC')) return new Date(dateString)
     
-    // Parse the date string with Moment.js
+    // Parse the dateString with moment if has unrecognizable timezone
     const momentObj = moment(dateString, 'ddd MMM DD HH:mm:ss zzz YYYY');
-
-    // Get the time zone offset in minutes
-    const timeZoneOffset = momentObj.utcOffset();
-
-    // Convert the moment object to a Date object with the correct UTC offset
-    const dateObj = momentObj.utcOffset(timeZoneOffset).toDate();
-
-    console.log(dateObj);
-
-    return dateObj
+    return momentObj.toISOString()
   }
   
 
