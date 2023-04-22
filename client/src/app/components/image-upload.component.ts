@@ -54,13 +54,15 @@ export class ImageUploadComponent {
     console.log(event)
     const reader = new FileReader()
     //event.target.files is an attribute of event object
-    const imageBlob = event.target.files[0]
+    var imageBlob = event.target.files[0]
     this.tempStorage.setImage(imageBlob)
     reader.readAsDataURL(imageBlob)
     console.log(imageBlob)
-    reader.onload = () => {
-      this.url = reader.result
-    }
+    reader.onloadend = () => {
+      const base64data = reader.result
+      if (null != base64data)
+        this.resizeDataUrl(base64data?.toString())
+    };
     event.target.value = ""
   }
 
@@ -98,9 +100,7 @@ export class ImageUploadComponent {
 
   capture(webcamImage: WebcamImage): void {
     console.info('received webcam image', webcamImage)
-    this.tempStorage.setImage(this.dataURItoBlob(webcamImage.imageAsDataUrl))
-    this.url = webcamImage.imageAsDataUrl
-
+    this.resizeDataUrl(webcamImage.imageAsDataUrl)
     this.showFile = true
   }
 
@@ -127,4 +127,38 @@ export class ImageUploadComponent {
     return new Blob([ab], {type: mimeString})
   }
 
+
+  resizeDataUrl(dataURL: string){
+    const image = new Image()
+    console.log("resizing")
+    image.src = dataURL
+    image.onload = () => {
+      const canvas = document.createElement('canvas')
+      const MAX_WIDTH = 600
+      const MAX_HEIGHT = 600
+      let width = image.width
+      let height = image.height
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width
+          width = MAX_WIDTH
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height
+          height = MAX_HEIGHT
+        }
+      }
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(image, 0, 0, width, height)
+      this.url = canvas.toDataURL('image/jpeg')
+      canvas.toBlob(blob =>{
+        console.log("canvas blob: ", blob)
+        this.tempStorage.setImage(blob)
+      })
+    };
+  }
 }

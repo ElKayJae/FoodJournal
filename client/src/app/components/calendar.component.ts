@@ -5,7 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { ApiService } from '../services/api.service';
 import { NavigationService } from '../services/navigation.service';
-import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -21,17 +21,12 @@ export class CalendarComponent implements OnInit, AfterViewInit{
   calender!: Calendar
   
   constructor(private router: Router, private navService: NavigationService,
-    private apiService: ApiService, private dialog: MatDialog) {
+    private apiService: ApiService, private authService: AuthService) {
   }
 
 
   ngOnInit(): void {
-    this.apiService.getTargetCalorie().then(
-      v => this.target = v['target']
-    ).catch(error => {
-      console.error(error, "authentication failed")
-      this.router.navigate(['/login'])
-    })
+    this.authService.authenticate()
   }
 
 
@@ -85,7 +80,10 @@ export class CalendarComponent implements OnInit, AfterViewInit{
 
   loadEvents(args: EventSourceFuncArg) : Promise<EventInput[]> {
     return new Promise<EventInput[]> ((resolve) => {
-      this.apiService.getDays(args.startStr, args.endStr).then(days => {
+      this.apiService.getTargetCalorie()
+      .then( v => this.target = v['target'])
+      .then(() =>this.apiService.getDays(args.startStr, args.endStr))
+      .then(days => {
         var events: EventInput[] = [];
         if (days[0] != null) days.forEach( day => {
           var colorCode = "#3F51B5"
