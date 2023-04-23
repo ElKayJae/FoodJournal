@@ -25,7 +25,7 @@ public class SecurityConfig {
         httpSecurity.cors().and().csrf().disable()
         .authorizeHttpRequests().requestMatchers(
             "/api/auth/**", "/index.html", "/", "/3rdpartylicenses.txt", "/favicon.ico",
-            "/main.9a63845abd206cb4.js", "/polyfills.78b5eb3e9a921dab.js","/runtime.357e91dfa57129cc.js",
+            "/main.fcb7769db21d921d.js", "/polyfills.78b5eb3e9a921dab.js","/runtime.357e91dfa57129cc.js",
             "/scripts.b7cebc1258dbcca8.js","/styles.7a21ac1018e81662.css","/manifest.json", "/images/**")
         .permitAll().anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

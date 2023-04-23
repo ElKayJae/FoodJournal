@@ -158,7 +158,7 @@ export class ImageUploadComponent {
       canvas.toBlob(blob =>{
         console.log("canvas blob: ", blob)
         this.tempStorage.setImage(blob)
-      })
+      },"image/jpeg")
     };
   }
 }
