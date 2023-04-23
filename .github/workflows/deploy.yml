@@ -21,6 +21,7 @@ jobs:
         run: npm i -g @railway/cli@2.1.0
         
       - name: Railway Up
+        continue-on-error: true
         run: railway up
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
